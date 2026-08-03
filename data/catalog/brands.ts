@@ -1,0 +1,65 @@
+import { slugify } from "@/utils/format";
+import type { Brand } from "@/types/catalog";
+
+const BRAND_NAMES = [
+  "Maison Aura",
+  "Urban District",
+  "Noir Atelier",
+  "Linea Moda",
+  "Studio Westfield",
+  "Verona Luxe",
+  "Monarch Label",
+  "Luna Craft",
+  "Velvet Society",
+  "Thread Theory",
+  "Northgate",
+  "Cobalt & Co.",
+  "Ivory Lane",
+  "Aria Atelier",
+  "Vantage Denim",
+  "Wildflower Label",
+  "Marchetti",
+  "Aurelia",
+  "Lumen Studio",
+  "Noir & Co.",
+  "Studio Maison",
+  "Amara Row",
+  "Cliffside Co.",
+  "Solstice Studio",
+  "Bramble & Birch",
+  "Halcyon House",
+  "Ferro Milano",
+  "Cascade Denim",
+  "Meridian Label",
+  "Oakwood & Co.",
+  "Saffron Thread",
+  "Bellamy Studio",
+  "Quartz Collective",
+  "Larkspur Label",
+  "Nimbus Studio",
+  "Terra Nova Label",
+  "Wren & Rowe",
+  "Cinder Co.",
+  "Alto Studio",
+  "Marlowe & James",
+  "Frost & Fern",
+  "Kessler Label",
+  "Vellum Studio",
+  "Ondine Atelier",
+  "Granite Row",
+  "Sable & Stone",
+  "Highline Label",
+  "Juniper & Co.",
+  "Crest Studio",
+  "Windward Label",
+] as const;
+
+export const brands: Brand[] = BRAND_NAMES.map((name, index) => ({
+  id: `brand-${index + 1}`,
+  name,
+  slug: slugify(name),
+}));
+
+export function getBrandBySlug(slug: string) {
+  return brands.find((b) => b.slug === slug);
+}
