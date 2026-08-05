@@ -3,14 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  Banknote,
-  CreditCard,
-  Gift,
-  Landmark,
-  Smartphone,
-  Wallet,
-} from "lucide-react";
+import { Banknote, CreditCard, Landmark, Smartphone, Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -24,11 +17,9 @@ import type { PaymentMethod } from "@/types/order";
 const PAYMENT_ICONS: Record<PaymentMethod, typeof CreditCard> = {
   upi: Smartphone,
   card: CreditCard,
-  debit: CreditCard,
-  netbanking: Landmark,
+  net_banking: Landmark,
   wallet: Wallet,
   cod: Banknote,
-  giftcard: Gift,
 };
 
 const BANKS = ["HDFC Bank", "ICICI Bank", "State Bank of India", "Axis Bank", "Kotak Mahindra Bank"];
@@ -44,7 +35,6 @@ export default function PaymentStep() {
   const [cardCvv, setCardCvv] = useState("");
   const [bank, setBank] = useState(BANKS[0]);
   const [wallet, setWallet] = useState(WALLETS[0]);
-  const [giftCardCode, setGiftCardCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -53,6 +43,11 @@ export default function PaymentStep() {
 
   if (!deliveryMethod) return null;
 
+  // These sub-forms are cosmetic only — nothing here is transmitted to the
+  // backend or a payment gateway. Only `method` (the PaymentMethod code) is
+  // sent to /checkout/place-order/; Razorpay isn't wired up on the backend
+  // yet (RAZORPAY_KEY_ID unset), so every method settles as pay-on-delivery
+  // in this demo until a real gateway integration lands.
   const onContinue = () => {
     setError(null);
     let label = "";
@@ -63,7 +58,7 @@ export default function PaymentStep() {
         return;
       }
       label = `UPI · ${upiId}`;
-    } else if (method === "card" || method === "debit") {
+    } else if (method === "card") {
       if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ""))) {
         setError("Enter a valid 16-digit card number");
         return;
@@ -77,17 +72,11 @@ export default function PaymentStep() {
         return;
       }
       const last4 = cardNumber.replace(/\s/g, "").slice(-4);
-      label = `${method === "card" ? "Credit" : "Debit"} Card ending in ${last4}`;
-    } else if (method === "netbanking") {
+      label = `Card ending in ${last4}`;
+    } else if (method === "net_banking") {
       label = `Net Banking · ${bank}`;
     } else if (method === "wallet") {
       label = `Wallet · ${wallet}`;
-    } else if (method === "giftcard") {
-      if (giftCardCode.trim().length < 6) {
-        setError("Enter a valid gift card code");
-        return;
-      }
-      label = `Gift Card · ${giftCardCode.trim().toUpperCase()}`;
     } else {
       label = "Cash on Delivery";
     }
@@ -139,7 +128,7 @@ export default function PaymentStep() {
             </div>
           )}
 
-          {(method === "card" || method === "debit") && (
+          {method === "card" && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5 sm:col-span-2">
                 <Label htmlFor="cardNumber">Card Number</Label>
@@ -176,7 +165,7 @@ export default function PaymentStep() {
             </div>
           )}
 
-          {method === "netbanking" && (
+          {method === "net_banking" && (
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="bank">Select Bank</Label>
               <select
@@ -209,18 +198,6 @@ export default function PaymentStep() {
                   </option>
                 ))}
               </select>
-            </div>
-          )}
-
-          {method === "giftcard" && (
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="giftcard">Gift Card Code</Label>
-              <Input
-                id="giftcard"
-                placeholder="FTGIFT-XXXXXX"
-                value={giftCardCode}
-                onChange={(e) => setGiftCardCode(e.target.value)}
-              />
             </div>
           )}
 

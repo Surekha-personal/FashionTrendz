@@ -4,12 +4,9 @@ import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { ProductCard } from "@/components/product/ProductCard";
 import { fadeInUp, staggerContainer, viewportOnce } from "@/lib/motion";
-import { getNewArrivals } from "@/data/catalog";
-import { toCardProducts } from "@/data/catalog/adapters";
+import type { Product } from "@/types/product";
 
-const newArrivalProducts = toCardProducts(getNewArrivals(8));
-
-export function NewArrivals() {
+export function NewArrivals({ products }: { products: Product[] }) {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <SectionHeading
@@ -25,7 +22,7 @@ export function NewArrivals() {
         viewport={viewportOnce}
         className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4"
       >
-        {newArrivalProducts.map((product) => (
+        {products.map((product) => (
           <motion.div key={product.id} variants={fadeInUp}>
             <ProductCard product={product} />
           </motion.div>

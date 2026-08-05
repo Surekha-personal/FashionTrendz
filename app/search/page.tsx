@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import { products } from "@/data/catalog";
-import { searchProducts } from "@/lib/search";
 import { ProductListingLayout } from "@/components/product/ProductListingLayout";
-import {
-  applyFilters,
-  computeFacets,
-  paginate,
-  parseFilterState,
-  sortProducts,
-  type SearchParamsRecord,
-} from "@/lib/filters";
+import { fetchProductListing } from "@/lib/apiCatalog";
+import { parseFilterState, type SearchParamsRecord } from "@/lib/filters";
 
 export const metadata: Metadata = {
   title: "Search | Fashion Trendz",
 };
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   searchParams: Promise<SearchParamsRecord>;
@@ -22,13 +16,17 @@ interface PageProps {
 export default async function SearchPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const query = Array.isArray(sp.q) ? sp.q[0] : (sp.q ?? "");
-
-  const base = query.trim() ? searchProducts(query, products) : products;
   const state = parseFilterState(sp);
-  const filtered = applyFilters(base, state);
-  const ordered = sp.sort ? sortProducts(filtered, state.sort) : filtered;
-  const { items, page, totalPages, total } = paginate(ordered, state.page);
-  const facets = computeFacets(base);
+
+  // The sidebar filters compose with free text through the same ProductFilter
+  // (?q= narrows, doesn't rank) — using it here keeps facets, sort and
+  // pagination consistent with every other listing page instead of juggling
+  // the separate ranked /products/search/ endpoint.
+  const { items, facets, page, totalPages, total } = await fetchProductListing(
+    "/products/",
+    state,
+    query.trim() ? { q: query.trim() } : {}
+  );
 
   return (
     <ProductListingLayout

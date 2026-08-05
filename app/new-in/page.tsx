@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { ProductListingLayout } from "@/components/product/ProductListingLayout";
-import { products } from "@/data/catalog";
-import { filterAndSort, type SearchParamsRecord } from "@/lib/filters";
+import { fetchProductListing } from "@/lib/apiCatalog";
+import { parseFilterState, type SearchParamsRecord } from "@/lib/filters";
 
 export const metadata: Metadata = {
   title: "New In | Fashion Trendz",
   description: "The newest arrivals across every category at Fashion Trendz.",
 };
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   searchParams: Promise<SearchParamsRecord>;
@@ -14,10 +16,11 @@ interface PageProps {
 
 export default async function NewInPage({ searchParams }: PageProps) {
   const sp = await searchParams;
-  const baseProducts = products.filter((p) => p.isNew);
-  const { facets, items, total, page, totalPages } = filterAndSort(
-    baseProducts,
-    sp
+  const state = parseFilterState(sp);
+  const { facets, items, total, page, totalPages } = await fetchProductListing(
+    "/products/",
+    state,
+    { is_new_arrival: "true" }
   );
 
   return (

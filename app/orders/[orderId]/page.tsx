@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Download, Package } from "lucide-react";
 import {
@@ -18,19 +18,35 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getOrderById } from "@/lib/orders";
+import { useAuth } from "@/context/AuthContext";
+import { api, ApiError } from "@/lib/api";
+import { apiOrderDetailToOrder } from "@/lib/apiAdapters";
 import { downloadInvoicePdf, formatPdfAmount } from "@/lib/generateInvoicePdf";
 import { formatPrice } from "@/utils/format";
 import { fadeInUp } from "@/lib/motion";
+import type { ApiOrderDetail } from "@/types/api";
 import type { Order } from "@/types/order";
 
 export default function OrderDetailPage() {
   const params = useParams<{ orderId: string }>();
+  const router = useRouter();
+  const { isAuthenticated, hydrated: authHydrated } = useAuth();
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
 
   useEffect(() => {
-    setOrder(getOrderById(params.orderId) ?? null);
-  }, [params.orderId]);
+    if (!authHydrated) return;
+    if (!isAuthenticated) {
+      router.replace(`/login?next=/orders/${params.orderId}`);
+      return;
+    }
+    api
+      .get<ApiOrderDetail>(`/orders/${params.orderId}/`)
+      .then((data) => setOrder(apiOrderDetailToOrder(data)))
+      .catch((err) => {
+        if (!(err instanceof ApiError)) throw err;
+        setOrder(null);
+      });
+  }, [params.orderId, authHydrated, isAuthenticated, router]);
 
   if (order === undefined) return null;
 
@@ -102,7 +118,7 @@ export default function OrderDetailPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge variant="secondary">Confirmed</Badge>
+          <Badge variant="secondary">{order.statusDisplay}</Badge>
           <Button variant="outline" size="sm" onClick={handleDownload}>
             <Download className="size-3.5" />
             Invoice

@@ -9,20 +9,14 @@ import { BadgePercent, Pencil, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCheckout } from "@/context/CheckoutContext";
 import { useCart } from "@/context/CartContext";
-import {
-  calculateTotals,
-  DELIVERY_OPTIONS,
-  estimatedDeliveryDate,
-  validateCoupon,
-} from "@/lib/checkout";
-import { generateInvoiceNumber, generateOrderNumber, saveOrder } from "@/lib/orders";
+import { api, ApiError } from "@/lib/api";
+import { DELIVERY_OPTIONS } from "@/lib/checkout";
 import { formatPrice } from "@/utils/format";
 import { fadeInUp } from "@/lib/motion";
-import type { Order } from "@/types/order";
+import type { ApiOrderDetail } from "@/types/api";
 
 export default function ReviewStep() {
   const router = useRouter();
@@ -31,64 +25,72 @@ export default function ReviewStep() {
     deliveryMethod,
     paymentMethod,
     paymentLabel,
-    couponCode,
-    couponDiscount,
-    setCoupon,
     hydrated: checkoutHydrated,
+    resetCheckout,
   } = useCheckout();
-  const { activeItems, subtotal, totalSavings, hydrated: cartHydrated } = useCart();
-  const [couponInput, setCouponInput] = useState(couponCode ?? "");
+  const {
+    activeItems,
+    summary,
+    couponCode,
+    applyCoupon,
+    removeCoupon,
+    refresh: refreshCart,
+    hydrated: cartHydrated,
+  } = useCart();
+  const [couponInput, setCouponInput] = useState("");
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [placing, setPlacing] = useState(false);
+  const [placeError, setPlaceError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (checkoutHydrated && !paymentMethod) router.replace("/checkout/payment");
-  }, [checkoutHydrated, paymentMethod, router]);
+    if (checkoutHydrated && (!paymentMethod || !shippingAddress?.id)) {
+      router.replace(shippingAddress?.id ? "/checkout/payment" : "/checkout");
+    }
+  }, [checkoutHydrated, paymentMethod, shippingAddress, router]);
 
-  if (!paymentMethod || !shippingAddress || !deliveryMethod || !cartHydrated) return null;
+  if (!paymentMethod || !shippingAddress?.id || !deliveryMethod || !cartHydrated || !summary) {
+    return null;
+  }
 
-  const totals = calculateTotals({
-    subtotal,
-    productDiscount: totalSavings,
-    couponCode: couponCode ?? undefined,
-    couponDiscount,
-    deliveryMethod,
-  });
   const deliveryOption = DELIVERY_OPTIONS.find((o) => o.id === deliveryMethod)!;
 
-  const applyCoupon = () => {
+  const onApplyCoupon = async () => {
     if (!couponInput.trim()) return;
-    const result = validateCoupon(couponInput, subtotal);
-    setCouponMessage(result.message);
-    if (result.valid) {
-      setCoupon(couponInput.trim().toUpperCase(), result.discount);
-    } else {
-      setCoupon(null, 0);
+    setApplyingCoupon(true);
+    setCouponMessage(null);
+    try {
+      const message = await applyCoupon(couponInput.trim().toUpperCase());
+      setCouponMessage(message);
+    } catch (err) {
+      setCouponMessage(err instanceof ApiError ? err.message : "Could not apply coupon.");
+    } finally {
+      setApplyingCoupon(false);
     }
   };
 
-  const removeCoupon = () => {
-    setCoupon(null, 0);
+  const onRemoveCoupon = async () => {
+    await removeCoupon();
     setCouponInput("");
     setCouponMessage(null);
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     setPlacing(true);
-    const order: Order = {
-      orderId: generateOrderNumber(),
-      invoiceNumber: generateInvoiceNumber(),
-      createdAt: new Date().toISOString(),
-      items: activeItems,
-      shippingAddress,
-      deliveryMethod,
-      paymentMethod,
-      paymentLabel,
-      totals,
-      estimatedDelivery: estimatedDeliveryDate(deliveryMethod),
-    };
-    saveOrder(order);
-    router.push(`/checkout/success?order=${order.orderId}`);
+    setPlaceError(null);
+    try {
+      const order = await api.post<ApiOrderDetail>("/checkout/place-order/", {
+        shipping_address: shippingAddress.id,
+        payment_method: paymentMethod,
+        delivery_method: deliveryMethod,
+      });
+      resetCheckout();
+      await refreshCart();
+      router.push(`/checkout/success?order=${order.order_number}`);
+    } catch (err) {
+      setPlaceError(err instanceof ApiError ? err.message : "Could not place your order.");
+      setPlacing(false);
+    }
   };
 
   return (
@@ -145,9 +147,6 @@ export default function ReviewStep() {
             {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.state} -{" "}
             {shippingAddress.pincode}, {shippingAddress.country}
           </p>
-          <Badge variant="outline" className="mt-1 w-fit capitalize">
-            {shippingAddress.addressType}
-          </Badge>
         </Card>
 
         <Card className="flex flex-col gap-1 p-5 sm:p-6">
@@ -161,9 +160,6 @@ export default function ReviewStep() {
             </Link>
           </div>
           <p className="text-sm">{deliveryOption.label}</p>
-          <p className="text-sm text-muted-foreground">
-            Estimated delivery: {estimatedDeliveryDate(deliveryMethod)}
-          </p>
         </Card>
 
         <Card className="flex flex-col gap-1 p-5 sm:p-6">
@@ -191,7 +187,7 @@ export default function ReviewStep() {
                 <BadgePercent className="size-3.5" />
                 {couponCode} applied
               </span>
-              <button type="button" onClick={removeCoupon} className="text-xs underline">
+              <button type="button" onClick={onRemoveCoupon} className="text-xs underline">
                 Remove
               </button>
             </div>
@@ -203,7 +199,7 @@ export default function ReviewStep() {
                 onChange={(e) => setCouponInput(e.target.value)}
                 className="uppercase"
               />
-              <Button variant="secondary" onClick={applyCoupon}>
+              <Button variant="secondary" onClick={onApplyCoupon} disabled={applyingCoupon}>
                 Apply
               </Button>
             </div>
@@ -211,9 +207,6 @@ export default function ReviewStep() {
           {couponMessage && !couponCode && (
             <p className="mt-2 text-xs text-destructive">{couponMessage}</p>
           )}
-          <p className="mt-3 text-xs text-muted-foreground">
-            Try WELCOME10, FLAT500, FASHION20 or LUXE15
-          </p>
         </Card>
 
         <Card className="h-fit p-5 sm:p-6">
@@ -221,40 +214,43 @@ export default function ReviewStep() {
           <div className="mt-4 flex flex-col gap-2.5 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Subtotal</span>
-              <span>{formatPrice(subtotal + totalSavings)}</span>
+              <span>{formatPrice(Number(summary.subtotal))}</span>
             </div>
-            {totalSavings > 0 && (
+            {Number(summary.discount) > 0 && (
               <div className="flex justify-between text-accent">
                 <span>Discount</span>
-                <span>-{formatPrice(totalSavings)}</span>
+                <span>-{formatPrice(Number(summary.discount))}</span>
               </div>
             )}
-            {totals.couponDiscount > 0 && (
+            {Number(summary.coupon_discount) > 0 && (
               <div className="flex justify-between text-accent">
                 <span>Coupon Discount</span>
-                <span>-{formatPrice(totals.couponDiscount)}</span>
+                <span>-{formatPrice(Number(summary.coupon_discount))}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-muted-foreground">GST (5%)</span>
-              <span>{formatPrice(totals.gst)}</span>
+              <span className="text-muted-foreground">Tax</span>
+              <span>{formatPrice(Number(summary.tax))}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Shipping</span>
-              <span>{totals.shipping === 0 ? "Free" : formatPrice(totals.shipping)}</span>
+              <span>
+                {Number(summary.shipping) === 0 ? "Free" : formatPrice(Number(summary.shipping))}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Platform Fee</span>
-              <span>{formatPrice(totals.platformFee)}</span>
+              <span>{formatPrice(Number(summary.platform_fee))}</span>
             </div>
             <Separator className="my-1" />
             <div className="flex justify-between text-base font-semibold">
               <span>Grand Total</span>
-              <span>{formatPrice(totals.grandTotal)}</span>
+              <span>{formatPrice(Number(summary.grand_total))}</span>
             </div>
           </div>
+          {placeError && <p className="mt-3 text-sm text-destructive">{placeError}</p>}
           <Button size="lg" className="mt-5 w-full" onClick={placeOrder} disabled={placing}>
-            Place Order
+            {placing ? "Placing Order…" : "Place Order"}
           </Button>
         </Card>
       </div>

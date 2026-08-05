@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -9,7 +10,10 @@ import {
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
-import { localStore, STORAGE_KEYS } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
+import { api, ApiError, apiFetchPaged } from "@/lib/api";
+import { apiWishlistItemToLine } from "@/lib/apiAdapters";
+import type { ApiWishlistItem } from "@/types/api";
 import type { WishlistLine } from "@/types/cart";
 
 interface WishlistContextValue {
@@ -24,38 +28,73 @@ interface WishlistContextValue {
 
 const WishlistContext = createContext<WishlistContextValue | null>(null);
 
+// The wishlist is account-only on the backend (IsAuthenticated in
+// apps/wishlist/views.py) — there's no guest equivalent to fall back to, so
+// signed-out actions prompt sign-in instead of writing anywhere locally.
 export function WishlistProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated, hydrated: authHydrated } = useAuth();
   const [items, setItems] = useState<WishlistLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    setItems(localStore.read(STORAGE_KEYS.wishlist, []));
-    setHydrated(true);
-  }, []);
+  const refresh = useCallback(async () => {
+    if (!isAuthenticated) {
+      setItems([]);
+      return;
+    }
+    try {
+      const { data } = await apiFetchPaged<ApiWishlistItem[]>("/wishlist/");
+      setItems(data.map(apiWishlistItemToLine));
+    } catch {
+      // Keep whatever was last loaded.
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (hydrated) localStore.write(STORAGE_KEYS.wishlist, items);
-  }, [items, hydrated]);
+    if (!authHydrated) return;
+    refresh().finally(() => setHydrated(true));
+  }, [authHydrated, refresh]);
 
-  const isWishlisted = (productId: string) =>
-    items.some((i) => i.productId === productId);
+  const isWishlisted = (productId: string) => items.some((i) => i.productId === productId);
+
+  const requireAuth = () => {
+    if (isAuthenticated) return true;
+    toast.error("Sign in to save items to your wishlist");
+    return false;
+  };
 
   const addToWishlist = (item: Omit<WishlistLine, "addedAt">) => {
-    setItems((prev) => {
-      if (prev.some((i) => i.productId === item.productId)) return prev;
-      return [{ ...item, addedAt: Date.now() }, ...prev];
-    });
-    toast.success("Added to wishlist");
+    if (!requireAuth()) return;
+    api
+      .post("/wishlist/add/", { product: item.slug })
+      .then(() => {
+        toast.success("Added to wishlist");
+        refresh();
+      })
+      .catch((err) => toast.error(err instanceof ApiError ? err.message : "Could not add item."));
   };
 
   const removeFromWishlist = (productId: string) => {
-    setItems((prev) => prev.filter((i) => i.productId !== productId));
-    toast("Removed from wishlist");
+    if (!requireAuth()) return;
+    const item = items.find((i) => i.productId === productId);
+    if (!item) return;
+    api
+      .post("/wishlist/remove/", { product: item.slug })
+      .then(() => {
+        toast("Removed from wishlist");
+        refresh();
+      })
+      .catch((err) => toast.error(err instanceof ApiError ? err.message : "Could not remove item."));
   };
 
   const toggleWishlist = (item: Omit<WishlistLine, "addedAt">) => {
-    if (isWishlisted(item.productId)) removeFromWishlist(item.productId);
-    else addToWishlist(item);
+    if (!requireAuth()) return;
+    api
+      .post<{ in_wishlist: boolean }>("/wishlist/toggle/", { product: item.slug })
+      .then((result) => {
+        toast.success(result.in_wishlist ? "Added to wishlist" : "Removed from wishlist");
+        refresh();
+      })
+      .catch((err) => toast.error(err instanceof ApiError ? err.message : "Could not update wishlist."));
   };
 
   const value = useMemo<WishlistContextValue>(
@@ -72,9 +111,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     [items, hydrated]
   );
 
-  return (
-    <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>
-  );
+  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
 }
 
 export function useWishlist() {

@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JsonLd } from "@/components/common/JsonLd";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
@@ -6,12 +6,13 @@ import { ShopByCategory } from "@/components/home/ShopByCategory";
 import { ProductCarouselSection } from "@/components/home/ProductCarouselSection";
 import { FeaturedBrands } from "@/components/home/FeaturedBrands";
 import { NewArrivals } from "@/components/home/NewArrivals";
-import {
-  getTrending,
-  getBestSellers,
-  getTrendingThisWeek,
-} from "@/data/catalog";
-import { toCardProducts } from "@/data/catalog/adapters";
+import { publicGet } from "@/lib/api";
+import { apiProductCardsToProducts } from "@/lib/apiAdapters";
+import type { ApiHomepageProducts } from "@/types/api";
+
+// Product rails are live backend data — always render at request time
+// rather than being baked into the build as a static shell.
+export const dynamic = "force-dynamic";
 
 function SectionFallback() {
   return (
@@ -23,44 +24,64 @@ function SectionFallback() {
 
 // Below-the-fold sections are code-split so the initial homepage bundle
 // stays focused on what's visible first.
-const LuxuryCollection = dynamic(() =>
+const LuxuryCollection = nextDynamic(() =>
   import("@/components/home/LuxuryCollection").then((m) => m.LuxuryCollection)
 );
-const FlashSale = dynamic(
+const FlashSale = nextDynamic(
   () => import("@/components/home/FlashSale").then((m) => m.FlashSale),
   { loading: SectionFallback }
 );
-const EditorsPicks = dynamic(() =>
+const EditorsPicks = nextDynamic(() =>
   import("@/components/home/EditorsPicks").then((m) => m.EditorsPicks)
 );
-const FashionInspiration = dynamic(
+const FashionInspiration = nextDynamic(
   () =>
     import("@/components/home/FashionInspiration").then(
       (m) => m.FashionInspiration
     ),
   { loading: SectionFallback }
 );
-const CustomerReviews = dynamic(() =>
+const CustomerReviews = nextDynamic(() =>
   import("@/components/home/CustomerReviews").then((m) => m.CustomerReviews)
 );
-const FashionBlog = dynamic(() =>
+const FashionBlog = nextDynamic(() =>
   import("@/components/home/FashionBlog").then((m) => m.FashionBlog)
 );
-const InstagramGallery = dynamic(() =>
+const InstagramGallery = nextDynamic(() =>
   import("@/components/home/InstagramGallery").then((m) => m.InstagramGallery)
 );
-const NewsletterSection = dynamic(() =>
+const NewsletterSection = nextDynamic(() =>
   import("@/components/home/NewsletterSection").then(
     (m) => m.NewsletterSection
   )
 );
 
-const trendingProducts = toCardProducts(getTrending(10));
-const bestSellerProducts = toCardProducts(getBestSellers(10));
-const trendingWeekProducts = toCardProducts(getTrendingThisWeek(10));
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export default function Home() {
+const EMPTY_HOMEPAGE: ApiHomepageProducts = {
+  featured: [],
+  trending: [],
+  new_arrivals: [],
+  best_sellers: [],
+  luxury: [],
+  flash_sale: [],
+  editors_picks: [],
+  trending_this_week: [],
+  recommended: [],
+  recently_added: [],
+};
+
+export default async function Home() {
+  const rails = await publicGet<ApiHomepageProducts>("/products/homepage/", 60).catch(
+    () => EMPTY_HOMEPAGE
+  );
+
+  const trendingProducts = apiProductCardsToProducts(rails.trending);
+  const bestSellerProducts = apiProductCardsToProducts(rails.best_sellers);
+  const trendingWeekProducts = apiProductCardsToProducts(rails.trending_this_week);
+  const newArrivalProducts = apiProductCardsToProducts(rails.new_arrivals);
+  const flashSaleProducts = apiProductCardsToProducts(rails.flash_sale);
+
   return (
     <>
       <JsonLd
@@ -86,7 +107,7 @@ export default function Home() {
         products={trendingProducts}
       />
       <FeaturedBrands />
-      <NewArrivals />
+      <NewArrivals products={newArrivalProducts} />
       <ProductCarouselSection
         eyebrow="Customer Favorites"
         title="Best Sellers"
@@ -96,7 +117,7 @@ export default function Home() {
         tinted
       />
       <LuxuryCollection />
-      <FlashSale />
+      <FlashSale products={flashSaleProducts} />
       <EditorsPicks />
       <ProductCarouselSection
         eyebrow="Don't Miss Out"

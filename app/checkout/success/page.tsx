@@ -8,28 +8,32 @@ import { CheckCircle2, Download, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useCheckout } from "@/context/CheckoutContext";
-import { useCart } from "@/context/CartContext";
-import { getOrderById } from "@/lib/orders";
+import { useAuth } from "@/context/AuthContext";
+import { api, ApiError } from "@/lib/api";
+import { apiOrderDetailToOrder } from "@/lib/apiAdapters";
 import { downloadInvoicePdf, formatPdfAmount } from "@/lib/generateInvoicePdf";
 import { formatPrice } from "@/utils/format";
+import type { ApiOrderDetail } from "@/types/api";
 import type { Order } from "@/types/order";
 
 export default function OrderSuccessPage() {
   const searchParams = useSearchParams();
+  const { user } = useAuth();
   const orderId = searchParams.get("order");
-  const { resetCheckout } = useCheckout();
-  const { emptyCart } = useCart();
   const [order, setOrder] = useState<Order | null | undefined>(undefined);
 
   useEffect(() => {
-    const found = orderId ? getOrderById(orderId) : undefined;
-    setOrder(found ?? null);
-    if (found) {
-      resetCheckout();
-      emptyCart();
+    if (!orderId) {
+      setOrder(null);
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    api
+      .get<ApiOrderDetail>(`/orders/${orderId}/`)
+      .then((data) => setOrder(apiOrderDetailToOrder(data)))
+      .catch((err) => {
+        if (!(err instanceof ApiError)) throw err;
+        setOrder(null);
+      });
   }, [orderId]);
 
   if (order === undefined) return null;
@@ -47,7 +51,7 @@ export default function OrderSuccessPage() {
   }
 
   const handleDownload = () => {
-    downloadInvoicePdf(`${order.invoiceNumber}.pdf`, [
+    downloadInvoicePdf(`${order.invoiceNumber || order.orderId}.pdf`, [
       `Invoice: ${order.invoiceNumber}`,
       `Order Number: ${order.orderId}`,
       `Order Date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`,
@@ -63,7 +67,7 @@ export default function OrderSuccessPage() {
       "",
       `Subtotal: ${formatPdfAmount(order.totals.subtotal)}`,
       `Coupon Discount: ${formatPdfAmount(order.totals.couponDiscount)}`,
-      `GST: ${formatPdfAmount(order.totals.gst)}`,
+      `Tax: ${formatPdfAmount(order.totals.gst)}`,
       `Shipping: ${formatPdfAmount(order.totals.shipping)}`,
       `Platform Fee: ${formatPdfAmount(order.totals.platformFee)}`,
       `Grand Total: ${formatPdfAmount(order.totals.grandTotal)}`,
@@ -94,8 +98,8 @@ export default function OrderSuccessPage() {
           Order Confirmed!
         </h1>
         <p className="text-sm text-muted-foreground">
-          Thank you for shopping with Fashion Trendz. A confirmation has been sent to{" "}
-          {order.shippingAddress.email}.
+          Thank you for shopping with Fashion Trendz.
+          {user?.email && ` A confirmation has been sent to ${user.email}.`}
         </p>
       </motion.div>
 
@@ -110,14 +114,18 @@ export default function OrderSuccessPage() {
             <span className="text-muted-foreground">Order Number</span>
             <span className="font-medium">{order.orderId}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Invoice Number</span>
-            <span className="font-medium">{order.invoiceNumber}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Estimated Delivery</span>
-            <span className="font-medium">{order.estimatedDelivery}</span>
-          </div>
+          {order.invoiceNumber && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Invoice Number</span>
+              <span className="font-medium">{order.invoiceNumber}</span>
+            </div>
+          )}
+          {order.estimatedDelivery && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Estimated Delivery</span>
+              <span className="font-medium">{order.estimatedDelivery}</span>
+            </div>
+          )}
           <Separator />
           <div className="flex justify-between text-base font-semibold">
             <span>Grand Total</span>

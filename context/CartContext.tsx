@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -9,14 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
-import { localStore, STORAGE_KEYS } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
+import { api, ApiError, cartSession } from "@/lib/api";
+import { apiCartItemToLine } from "@/lib/apiAdapters";
+import type { ApiCart, ApiCartSummary } from "@/types/api";
 import type { AddToCartInput, CartLine } from "@/types/cart";
-
-const MAX_QTY = 10;
-
-function makeLineId(productId: string, size?: string, color?: string) {
-  return [productId, size ?? "_", color ?? "_"].join("::");
-}
 
 interface CartContextValue {
   items: CartLine[];
@@ -26,144 +24,192 @@ interface CartContextValue {
   subtotal: number;
   totalMrp: number;
   totalSavings: number;
+  // The backend's authoritative price breakdown (tax, shipping, platform fee,
+  // coupon, grand total) — checkout reads this directly rather than
+  // re-deriving numbers the server already computed.
+  summary: ApiCartSummary | null;
+  couponCode: string;
   hydrated: boolean;
-  addToCart: (input: AddToCartInput) => void;
-  removeFromCart: (lineId: string) => void;
-  updateQuantity: (lineId: string, quantity: number) => void;
-  increment: (lineId: string) => void;
-  decrement: (lineId: string) => void;
-  saveForLater: (lineId: string) => void;
-  moveToCartFromSaved: (lineId: string) => void;
-  emptyCart: () => void;
+  addToCart: (input: AddToCartInput) => Promise<void>;
+  removeFromCart: (lineId: string) => Promise<void>;
+  updateQuantity: (lineId: string, quantity: number) => Promise<void>;
+  increment: (lineId: string) => Promise<void>;
+  decrement: (lineId: string) => Promise<void>;
+  saveForLater: (lineId: string) => Promise<void>;
+  moveToCartFromSaved: (lineId: string) => Promise<void>;
+  emptyCart: () => Promise<void>;
+  applyCoupon: (code: string) => Promise<string>;
+  removeCoupon: () => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+// crypto.randomUUID() only exists in secure contexts (HTTPS, or localhost) —
+// on an HTTP LAN address, or in an older browser, `crypto` is present but
+// `randomUUID` is not, and calling it throws "crypto.randomUUID is not a
+// function". crypto.getRandomValues() has much broader support (all modern
+// browsers, no secure-context restriction) and is enough to build a v4 UUID
+// by hand; Math.random is a last-resort fallback for the rare environment
+// with no crypto object at all. This id only keys an anonymous guest cart,
+// not anything security-sensitive, so a non-cryptographic fallback is fine.
+function generateGuestSessionId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+    const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0"));
+    return [
+      hex.slice(0, 4).join(""),
+      hex.slice(4, 6).join(""),
+      hex.slice(6, 8).join(""),
+      hex.slice(8, 10).join(""),
+      hex.slice(10, 16).join(""),
+    ].join("-");
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
+// A cart line is addressed by its variant SKU (unique per cart —
+// apps/cart/models.py CartItem.unique_variant_per_cart), so lineId === sku
+// throughout. Guest identity travels as a client-minted key in the
+// X-Cart-Session header (apps/cart/views.py resolves any caller-supplied
+// key into that guest's cart); it's replaced by the JWT once signed in.
+//
+// Only guests get a key. A signed-in caller has already had their guest
+// cart merged (AuthContext.mergeGuestCartIfAny clears the stored key on
+// login) — minting a fresh one here regardless of auth state used to make
+// every authenticated cart request carry a pointless X-Cart-Session header,
+// triggering a no-op merge lookup on every call.
+function ensureGuestSession(isAuthenticated: boolean): void {
+  if (isAuthenticated) return;
+  if (!cartSession.get()) {
+    cartSession.set(generateGuestSessionId());
+  }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartLine[]>([]);
+  const { isAuthenticated } = useAuth();
+  const [cart, setCart] = useState<ApiCart | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
+  const refresh = useCallback(async () => {
+    ensureGuestSession(isAuthenticated);
+    try {
+      const data = await api.get<ApiCart>("/cart/", { cartHeader: true });
+      setCart(data);
+    } catch {
+      // Leave the previous cart state in place rather than blanking the
+      // drawer out on a transient network error.
+    }
+  }, [isAuthenticated]);
+
   useEffect(() => {
-    setItems(localStore.read(STORAGE_KEYS.cart, []));
-    setHydrated(true);
+    refresh().finally(() => setHydrated(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (hydrated) localStore.write(STORAGE_KEYS.cart, items);
-  }, [items, hydrated]);
-
-  const addToCart = (input: AddToCartInput) => {
-    const lineId = makeLineId(input.productId, input.size, input.color);
-    const qty = input.quantity ?? 1;
-
-    setItems((prev) => {
-      const existing = prev.find((i) => i.lineId === lineId && !i.savedForLater);
-      if (existing) {
-        return prev.map((i) =>
-          i.lineId === lineId && !i.savedForLater
-            ? { ...i, quantity: Math.min(i.quantity + qty, MAX_QTY) }
-            : i
-        );
+  const runAction = useCallback(
+    async (action: () => Promise<unknown>, successMessage?: string) => {
+      try {
+        await action();
+        await refresh();
+        if (successMessage) toast.success(successMessage);
+      } catch (err) {
+        toast.error(err instanceof ApiError ? err.message : "Something went wrong.");
       }
-      const newLine: CartLine = {
-        lineId,
-        productId: input.productId,
-        slug: input.slug,
-        name: input.name,
-        brand: input.brand,
-        image: input.image,
-        price: input.price,
-        discountedPrice: input.discountedPrice,
-        size: input.size,
-        color: input.color,
-        quantity: Math.min(qty, MAX_QTY),
-        savedForLater: false,
-      };
-      return [newLine, ...prev];
-    });
+    },
+    [refresh]
+  );
 
-    toast.success("Added to bag", {
-      description: [input.size, input.color].filter(Boolean).join(" · ") || undefined,
-    });
-  };
-
-  const removeFromCart = (lineId: string) => {
-    setItems((prev) => prev.filter((i) => i.lineId !== lineId));
-    toast("Removed from bag");
-  };
-
-  const updateQuantity = (lineId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(lineId);
+  const addToCart = async (input: AddToCartInput) => {
+    if (!input.variantSku) {
+      toast.error("Please select a size and colour");
       return;
     }
-    setItems((prev) =>
-      prev.map((i) =>
-        i.lineId === lineId ? { ...i, quantity: Math.min(quantity, MAX_QTY) } : i
-      )
+    await runAction(
+      () =>
+        api.post(
+          "/cart/add/",
+          { product: input.slug, variant: input.variantSku, quantity: input.quantity ?? 1 },
+          { cartHeader: true }
+        ),
+      "Added to bag"
     );
   };
 
-  const increment = (lineId: string) => {
-    setItems((prev) =>
-      prev.map((i) =>
-        i.lineId === lineId
-          ? { ...i, quantity: Math.min(i.quantity + 1, MAX_QTY) }
-          : i
-      )
+  const removeFromCart = (lineId: string) =>
+    runAction(
+      () => api.post("/cart/remove/", { variant: lineId }, { cartHeader: true }),
+      "Removed from bag"
     );
+
+  const updateQuantity = (lineId: string, quantity: number) =>
+    runAction(() => api.post("/cart/update/", { variant: lineId, quantity }, { cartHeader: true }));
+
+  const increment = (lineId: string) =>
+    runAction(() => api.post("/cart/increase/", { variant: lineId }, { cartHeader: true }));
+
+  const decrement = (lineId: string) =>
+    runAction(() => api.post("/cart/decrease/", { variant: lineId }, { cartHeader: true }));
+
+  const saveForLater = (lineId: string) =>
+    runAction(
+      () => api.post("/cart/save-for-later/", { variant: lineId }, { cartHeader: true }),
+      "Saved for later"
+    );
+
+  const moveToCartFromSaved = (lineId: string) =>
+    runAction(
+      () => api.post("/cart/move-to-bag/", { variant: lineId }, { cartHeader: true }),
+      "Moved to bag"
+    );
+
+  const emptyCart = () =>
+    runAction(
+      () => api.post("/cart/clear/", { include_saved: false }, { cartHeader: true }),
+      "Bag emptied"
+    );
+
+  // Coupon apply/remove throw ApiError straight through instead of going via
+  // runAction, since the checkout review step needs the exact backend
+  // message ("Add items worth ₹999 or more…") rather than a fixed toast.
+  //
+  // These go through /coupons/ (apps/coupons), not /cart/apply-coupon/ —
+  // the cart module's own apply-coupon action is a documented placeholder
+  // that never validates a code or applies a discount.
+  const applyCoupon = async (code: string): Promise<string> => {
+    const result = await api.post<{ message: string }>("/coupons/apply/", { code });
+    await refresh();
+    return result.message;
   };
 
-  const decrement = (lineId: string) => {
-    const line = items.find((i) => i.lineId === lineId);
-    if (line && line.quantity <= 1) {
-      removeFromCart(lineId);
-      return;
-    }
-    setItems((prev) =>
-      prev.map((i) =>
-        i.lineId === lineId ? { ...i, quantity: Math.max(i.quantity - 1, 1) } : i
-      )
-    );
-  };
-
-  const saveForLater = (lineId: string) => {
-    setItems((prev) =>
-      prev.map((i) => (i.lineId === lineId ? { ...i, savedForLater: true } : i))
-    );
-    toast.success("Saved for later");
-  };
-
-  const moveToCartFromSaved = (lineId: string) => {
-    setItems((prev) =>
-      prev.map((i) => (i.lineId === lineId ? { ...i, savedForLater: false } : i))
-    );
-    toast.success("Moved to bag");
-  };
-
-  const emptyCart = () => {
-    setItems((prev) => prev.filter((i) => i.savedForLater));
-    toast("Bag emptied");
+  const removeCoupon = async () => {
+    await api.post("/coupons/remove/", {});
+    await refresh();
   };
 
   const value = useMemo<CartContextValue>(() => {
-    const activeItems = items.filter((i) => !i.savedForLater);
-    const savedItems = items.filter((i) => i.savedForLater);
-    const itemCount = activeItems.reduce((sum, i) => sum + i.quantity, 0);
-    const subtotal = activeItems.reduce(
-      (sum, i) => sum + i.discountedPrice * i.quantity,
-      0
-    );
-    const totalMrp = activeItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const activeItems = (cart?.items ?? []).map(apiCartItemToLine);
+    const savedItems = (cart?.saved_items ?? []).map(apiCartItemToLine);
+    const summary = cart?.summary;
 
     return {
-      items,
+      items: [...activeItems, ...savedItems],
       activeItems,
       savedItems,
-      itemCount,
-      subtotal,
-      totalMrp,
-      totalSavings: totalMrp - subtotal,
+      itemCount: summary?.unit_count ?? 0,
+      subtotal: summary ? Number(summary.subtotal) - Number(summary.discount) : 0,
+      totalMrp: summary ? Number(summary.subtotal) : 0,
+      totalSavings: summary ? Number(summary.discount) : 0,
+      summary: summary ?? null,
+      couponCode: cart?.coupon_code ?? "",
       hydrated,
       addToCart,
       removeFromCart,
@@ -173,9 +219,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       saveForLater,
       moveToCartFromSaved,
       emptyCart,
+      applyCoupon,
+      removeCoupon,
+      refresh,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, hydrated]);
+  }, [cart, hydrated]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -18,11 +18,11 @@ import { MobileNav } from "@/components/layout/MobileNav";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { useScroll } from "@/hooks/use-scroll";
+import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import {
   disableDemoMode,
   enableDemoMode,
-  getDemoUser,
   isDemoModeEnabled,
 } from "@/lib/demoMode";
 import { cn } from "@/lib/utils";
@@ -30,12 +30,11 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const scrolled = useScroll();
   const { count: wishlistCount } = useWishlist();
+  const { user, isAuthenticated, logout } = useAuth();
   const [demoOn, setDemoOn] = useState(false);
-  const [demoUserName, setDemoUserName] = useState<string | null>(null);
 
   useEffect(() => {
     setDemoOn(isDemoModeEnabled());
-    setDemoUserName(getDemoUser()?.name ?? null);
   }, []);
 
   return (
@@ -91,19 +90,19 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {demoUserName ? (
-                <DropdownMenuLabel>Hi, {demoUserName}</DropdownMenuLabel>
+              {isAuthenticated ? (
+                <DropdownMenuLabel>Hi, {user?.first_name || user?.email}</DropdownMenuLabel>
               ) : (
                 <DropdownMenuItem asChild>
-                  <Link href="/account/login">Login</Link>
+                  <Link href="/login">Login</Link>
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem asChild>
-                <Link href="/account">My Account</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
                 <Link href="/orders">Orders</Link>
               </DropdownMenuItem>
+              {isAuthenticated && (
+                <DropdownMenuItem onSelect={() => logout()}>Logout</DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={() => (demoOn ? disableDemoMode() : enableDemoMode())}

@@ -88,6 +88,8 @@ function pastOrder(itemIndexes: number[], daysAgo: number): Order {
     deliveryMethod: "standard",
     paymentMethod: "upi",
     paymentLabel: "UPI · ananya.sharma@okhdfcbank",
+    status: "delivered",
+    statusDisplay: "Delivered",
     totals,
     estimatedDelivery: estimatedDeliveryDate("standard"),
   };

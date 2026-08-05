@@ -13,15 +13,12 @@ import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product/ProductCard";
 import { CountdownTimer } from "@/components/home/CountdownTimer";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
-import { getFlashSaleProducts } from "@/data/catalog";
-import { toCardProducts } from "@/data/catalog/adapters";
-
-const flashSaleProducts = toCardProducts(getFlashSaleProducts(10));
+import type { Product } from "@/types/product";
 
 const SALE_END = new Date();
 SALE_END.setHours(SALE_END.getHours() + 18, 30, 0, 0);
 
-export function FlashSale() {
+export function FlashSale({ products: flashSaleProducts }: { products: Product[] }) {
   return (
     <section className="bg-primary text-primary-foreground">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">

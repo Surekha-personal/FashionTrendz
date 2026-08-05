@@ -1,11 +1,13 @@
 import type { CartLine } from "@/types/cart";
 
-export type AddressType = "home" | "work" | "other";
+// Matches apps/core/choices.AddressType on the backend.
+export type AddressType = "home" | "work" | "billing" | "shipping" | "other";
 
 export interface ShippingAddress {
+  id?: number; // backend Address id, once saved via POST /addresses/
   fullName: string;
   mobile: string;
-  email: string;
+  email?: string; // the backend address book carries no email column
   address: string;
   city: string;
   state: string;
@@ -14,16 +16,11 @@ export interface ShippingAddress {
   addressType: AddressType;
 }
 
-export type DeliveryMethod = "standard" | "express" | "sameday";
+// Matches apps/orders/models.DeliveryMethod.
+export type DeliveryMethod = "standard" | "express" | "scheduled";
 
-export type PaymentMethod =
-  | "upi"
-  | "card"
-  | "debit"
-  | "netbanking"
-  | "wallet"
-  | "cod"
-  | "giftcard";
+// Matches apps/core/choices.PaymentMethod.
+export type PaymentMethod = "upi" | "card" | "net_banking" | "wallet" | "cod";
 
 export interface OrderTotals {
   subtotal: number;
@@ -47,4 +44,8 @@ export interface Order {
   paymentLabel: string;
   totals: OrderTotals;
   estimatedDelivery: string;
+  // Backend fulfilment state (apps/orders/models.OrderStatus), e.g. "placed",
+  // "shipped", "delivered", "cancelled". statusDisplay is the human label.
+  status: string;
+  statusDisplay: string;
 }

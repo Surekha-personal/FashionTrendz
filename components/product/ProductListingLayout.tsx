@@ -22,9 +22,9 @@ import { JsonLd } from "@/components/common/JsonLd";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
 import { SearchX } from "lucide-react";
-import { toCardProducts } from "@/data/catalog/adapters";
 import type { SearchParamsRecord } from "@/lib/filters";
-import type { FilterFacets, Product } from "@/types/catalog";
+import type { FilterFacets } from "@/types/catalog";
+import type { Product } from "@/types/product";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -77,7 +77,7 @@ export function ProductListingLayout({
   showGender = true,
   emptyMessage = "No products match these filters yet. Try adjusting or clearing a filter.",
 }: ProductListingLayoutProps) {
-  const cardProducts = toCardProducts(products);
+  const cardProducts = products;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

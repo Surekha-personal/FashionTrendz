@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
+import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 
 const STEP_FOR_PATH: Record<string, number> = {
@@ -16,16 +17,25 @@ export default function CheckoutLayout({ children }: { children: React.ReactNode
   const pathname = usePathname();
   const router = useRouter();
   const { activeItems, hydrated } = useCart();
+  const { isAuthenticated, hydrated: authHydrated } = useAuth();
   const isSuccess = pathname === "/checkout/success";
   const currentStep = STEP_FOR_PATH[pathname];
 
   useEffect(() => {
+    // Placing an order is an account action on the backend (apps/orders
+    // requires IsAuthenticated), so checkout starts with a sign-in gate
+    // rather than failing on the last step.
+    if (authHydrated && !isSuccess && !isAuthenticated) {
+      router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      return;
+    }
     if (hydrated && !isSuccess && activeItems.length === 0) {
       router.replace("/cart");
     }
-  }, [hydrated, isSuccess, activeItems.length, router]);
+  }, [hydrated, isSuccess, activeItems.length, router, authHydrated, isAuthenticated, pathname]);
 
-  if (!hydrated) return null;
+  if (!authHydrated || !hydrated) return null;
+  if (!isSuccess && !isAuthenticated) return null;
   if (!isSuccess && activeItems.length === 0) return null;
 
   return (

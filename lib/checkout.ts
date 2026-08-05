@@ -90,34 +90,37 @@ export const DELIVERY_OPTIONS: DeliveryOption[] = [
     etaDays: 3,
   },
   {
-    id: "sameday",
-    label: "Same Day Delivery",
-    description: "Order before 12 PM for delivery today",
-    etaLabel: "Today, by 9 PM",
-    etaDays: 0,
+    id: "scheduled",
+    label: "Scheduled Delivery",
+    description: "Pick a delivery window that works for you",
+    etaLabel: "Choose at checkout",
+    etaDays: 4,
   },
 ];
 
+// Matches apps/core/choices.PaymentMethod — the only methods the backend
+// actually accepts on /checkout/place-order/.
 export const PAYMENT_METHODS: { id: PaymentMethod; label: string }[] = [
   { id: "upi", label: "UPI" },
-  { id: "card", label: "Credit Card" },
-  { id: "debit", label: "Debit Card" },
-  { id: "netbanking", label: "Net Banking" },
+  { id: "card", label: "Credit / Debit Card" },
+  { id: "net_banking", label: "Net Banking" },
   { id: "wallet", label: "Wallet" },
   { id: "cod", label: "Cash on Delivery" },
-  { id: "giftcard", label: "Gift Card" },
 ];
 
 const FREE_SHIPPING_THRESHOLD = 1999;
 const STANDARD_SHIPPING_FEE = 99;
 const EXPRESS_SHIPPING_FEE = 149;
-const SAMEDAY_SHIPPING_FEE = 249;
+const SCHEDULED_SHIPPING_FEE = 129;
 export const PLATFORM_FEE = 20;
 const GST_RATE = 0.05;
 
+// Client-side estimate only, shown before the backend confirms the real
+// number on the review step (apps/cart/services.py owns the authoritative
+// calculation, driven by CART_* settings).
 export function shippingFeeFor(method: DeliveryMethod, amountAfterDiscount: number) {
   if (method === "express") return EXPRESS_SHIPPING_FEE;
-  if (method === "sameday") return SAMEDAY_SHIPPING_FEE;
+  if (method === "scheduled") return SCHEDULED_SHIPPING_FEE;
   return amountAfterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_FEE;
 }
 

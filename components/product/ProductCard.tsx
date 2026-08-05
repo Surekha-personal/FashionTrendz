@@ -4,20 +4,27 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, Eye } from "lucide-react";
+import { Heart, Eye, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Rating } from "@/components/common/Rating";
 import { Modal } from "@/components/common/Modal";
 import { ProductOptions } from "@/components/product/ProductOptions";
 import { useWishlist } from "@/context/WishlistContext";
+import { api } from "@/lib/api";
+import { apiVariantsToOptions } from "@/lib/apiAdapters";
 import { formatPrice } from "@/utils/format";
 import { cn } from "@/lib/utils";
-import type { Product } from "@/types/product";
+import type { ApiProductDetail } from "@/types/api";
+import type { Product, ProductVariantOption } from "@/types/product";
 
 export function ProductCard({ product }: { product: Product }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [variants, setVariants] = useState<ProductVariantOption[] | undefined>(
+    product.variants
+  );
+  const [loadingVariants, setLoadingVariants] = useState(false);
   const {
     id,
     name,
@@ -105,6 +112,14 @@ export function ProductCard({ product }: { product: Product }) {
                 onClick={(e) => {
                   e.preventDefault();
                   setQuickViewOpen(true);
+                  if (!variants) {
+                    setLoadingVariants(true);
+                    api
+                      .get<ApiProductDetail>(`/products/${slug}/quick-view/`, { auth: false })
+                      .then((detail) => setVariants(apiVariantsToOptions(detail.variants)))
+                      .catch(() => setVariants([]))
+                      .finally(() => setLoadingVariants(false));
+                  }
                 }}
                 className="absolute inset-x-2 bottom-2 flex translate-y-2 items-center justify-center gap-1.5 rounded-lg bg-background/95 py-2 text-xs font-medium opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
               >
@@ -171,19 +186,27 @@ export function ProductCard({ product }: { product: Product }) {
             >
               View full details
             </Link>
-            <ProductOptions
-              productId={id}
-              slug={slug}
-              name={name}
-              brand={brand}
-              image={image}
-              price={compareAtPrice ?? price}
-              discountedPrice={price}
-              sizes={sizes ?? []}
-              colors={colors ?? []}
-              stock={stock ?? 99}
-              onAdded={() => setQuickViewOpen(false)}
-            />
+            {loadingVariants ? (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="size-4 animate-spin" />
+                Loading options…
+              </div>
+            ) : (
+              <ProductOptions
+                productId={id}
+                slug={slug}
+                name={name}
+                brand={brand}
+                image={image}
+                price={compareAtPrice ?? price}
+                discountedPrice={price}
+                sizes={sizes ?? [...new Set((variants ?? []).map((v) => v.size))]}
+                colors={colors ?? [...new Set((variants ?? []).map((v) => v.color))]}
+                stock={stock ?? 99}
+                variants={variants}
+                onAdded={() => setQuickViewOpen(false)}
+              />
+            )}
           </div>
         </div>
       </Modal>

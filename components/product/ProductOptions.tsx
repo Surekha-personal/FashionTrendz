@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Heart, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { cn } from "@/lib/utils";
+import type { ProductVariantOption } from "@/types/product";
 
 const COLOR_HEX: Record<string, string> = {
   Black: "#111111",
@@ -42,6 +43,11 @@ interface ProductOptionsProps {
   sizes: string[];
   colors: string[];
   stock: number;
+  // Real colour/size -> SKU + stock data, from the product detail or
+  // quick-view endpoint. Add to Bag is disabled until this has loaded,
+  // since the backend cart addresses a line by variant SKU, not by a plain
+  // size/colour pair.
+  variants?: ProductVariantOption[];
   onAdded?: () => void;
 }
 
@@ -56,6 +62,7 @@ export function ProductOptions({
   sizes,
   colors,
   stock,
+  variants,
   onAdded,
 }: ProductOptionsProps) {
   const { addToCart } = useCart();
@@ -66,9 +73,26 @@ export function ProductOptions({
   const outOfStock = stock <= 0;
   const requiresSize = sizes.length > 0 && sizes[0] !== "One Size";
 
+  const matchedVariant = useMemo(() => {
+    if (!variants) return undefined;
+    return variants.find(
+      (v) =>
+        (!requiresSize || v.size === selectedSize) &&
+        (colors.length === 0 || v.color === selectedColor)
+    );
+  }, [variants, selectedSize, selectedColor, requiresSize, colors.length]);
+
   const addToBag = () => {
     if (requiresSize && !selectedSize) {
       toast.error("Please select a size");
+      return;
+    }
+    if (variants && !matchedVariant) {
+      toast.error("That combination isn't available");
+      return;
+    }
+    if (matchedVariant && matchedVariant.availableStock <= 0) {
+      toast.error("That combination is out of stock");
       return;
     }
     addToCart({
@@ -81,6 +105,7 @@ export function ProductOptions({
       discountedPrice,
       size: selectedSize,
       color: selectedColor || undefined,
+      variantSku: matchedVariant?.sku,
     });
     onAdded?.();
   };
@@ -139,7 +164,7 @@ export function ProductOptions({
         <Button
           size="lg"
           className="flex-1"
-          disabled={outOfStock}
+          disabled={outOfStock || (variants !== undefined && variants.length === 0)}
           onClick={addToBag}
         >
           <ShoppingBag />
