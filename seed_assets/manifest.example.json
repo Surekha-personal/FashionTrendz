@@ -1,0 +1,34 @@
+{
+  "_comment": [
+    "Rename this file to manifest.json to activate it.",
+    "Keys are the product SKU (preferred) or slug. Values are image paths",
+    "relative to seed_assets/, in display order — the first is the primary",
+    "image shown on listing cards.",
+    "Absolute paths and http(s) URLs also work; URLs are only downloaded when",
+    "the seed command is run with --fetch-remote."
+  ],
+
+  "FT-000001": [
+    "products/dresses/midi-floral-front.jpg",
+    "products/dresses/midi-floral-back.jpg",
+    "products/dresses/midi-floral-detail.jpg",
+    "products/dresses/midi-floral-styled.jpg",
+    "products/dresses/midi-floral-flat.jpg"
+  ],
+
+  "FT-000002": [
+    "products/shirts/oxford-blue-front.jpg",
+    "products/shirts/oxford-blue-back.jpg",
+    "products/shirts/oxford-blue-collar.jpg",
+    "products/shirts/oxford-blue-cuff.jpg"
+  ],
+
+  "classic-midi-dress": [
+    "products/dresses/classic-midi-1.jpg",
+    "products/dresses/classic-midi-2.jpg",
+    "products/dresses/classic-midi-3.jpg",
+    "products/dresses/classic-midi-4.jpg",
+    "products/dresses/classic-midi-5.jpg",
+    "products/dresses/classic-midi-6.jpg"
+  ]
+}

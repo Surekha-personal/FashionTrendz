@@ -1,0 +1,12 @@
+sku,image,display_order
+FT-000001,products/dresses/midi-floral-front.jpg,0
+FT-000001,products/dresses/midi-floral-back.jpg,1
+FT-000001,products/dresses/midi-floral-detail.jpg,2
+FT-000001,products/dresses/midi-floral-styled.jpg,3
+FT-000001,products/dresses/midi-floral-flat.jpg,4
+FT-000002,products/shirts/oxford-blue-front.jpg,0
+FT-000002,products/shirts/oxford-blue-back.jpg,1
+FT-000002,products/shirts/oxford-blue-collar.jpg,2
+FT-000002,products/shirts/oxford-blue-cuff.jpg,3
+FT-000003,https://cdn.example.com/lookbook/kurta-set-1.jpg,0
+FT-000003,https://cdn.example.com/lookbook/kurta-set-2.jpg,1

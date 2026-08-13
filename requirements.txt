@@ -1,0 +1,38 @@
+asgiref==3.12.1
+attrs==26.1.0
+Django==6.0.7
+django-cors-headers==4.9.0
+django-filter==26.1
+djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+drf-spectacular==0.30.0
+inflection==0.5.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+pillow==12.3.0
+psycopg2-binary==2.9.12
+PyJWT==2.13.0
+python-decouple==3.8
+PyYAML==6.0.3
+referencing==0.37.0
+reportlab==4.5.1
+rpds-py==2026.6.3
+sqlparse==0.5.5
+tzdata==2026.3
+uritemplate==4.2.0
+whitenoise==6.12.0
+
+# --- Production ---------------------------------------------------------
+# Task queue and scheduler. The app runs without these — notifications
+# deliver inline and there is no beat — so they are only required on a
+# deployment that runs a worker.
+celery==5.6.1
+redis==6.5.0
+
+# Object storage. Only used when AWS_STORAGE_BUCKET_NAME is set; the default
+# file storage stays on local disk otherwise.
+boto3==1.41.9
+django-storages==1.15.0
+
+# WSGI server. gunicorn.conf.py holds the tuning.
+gunicorn==23.0.0

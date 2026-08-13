@@ -1,0 +1,6999 @@
+[
+ {
+  "app": "users",
+  "model": "User",
+  "table": "users_user",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "password",
+    "col": "password",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 128
+   },
+   {
+    "name": "last_login",
+    "col": "last_login",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "is_superuser",
+    "col": "is_superuser",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "first_name",
+    "col": "first_name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "last_name",
+    "col": "last_name",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "email",
+    "col": "email",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 254
+   },
+   {
+    "name": "mobile_number",
+    "col": "mobile_number",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16
+   },
+   {
+    "name": "profile_image",
+    "col": "profile_image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "date_of_birth",
+    "col": "date_of_birth",
+    "type": "DateField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "gender",
+    "col": "gender",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 12,
+    "choices": [
+     "male",
+     "female",
+     "other",
+     "undisclosed"
+    ]
+   },
+   {
+    "name": "is_email_verified",
+    "col": "is_email_verified",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "is_mobile_verified",
+    "col": "is_mobile_verified",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "is_staff",
+    "col": "is_staff",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "groups",
+    "col": "groups",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "auth_group",
+    "on_delete": null,
+    "related_name": "user_set",
+    "o2o": false
+   },
+   {
+    "name": "user_permissions",
+    "col": "user_permissions",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "auth_permission",
+    "on_delete": null,
+    "related_name": "user_set",
+    "o2o": false
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "user_created_at_idx",
+    "fields": [
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "users",
+  "model": "Address",
+  "table": "users_address",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "addresses",
+    "o2o": false
+   },
+   {
+    "name": "full_name",
+    "col": "full_name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "mobile",
+    "col": "mobile",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16
+   },
+   {
+    "name": "address_line_1",
+    "col": "address_line_1",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "address_line_2",
+    "col": "address_line_2",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "city",
+    "col": "city",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "state",
+    "col": "state",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "country",
+    "col": "country",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "postal_code",
+    "col": "postal_code",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16
+   },
+   {
+    "name": "is_default",
+    "col": "is_default",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_default_address_per_user",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('user',) name='unique_default_address_per_user' condition=(AND: ('is_default', True))>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "address_user_default_idx",
+    "fields": [
+     "user",
+     "is_default"
+    ]
+   }
+  ],
+  "ordering": [
+   "-is_default",
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "catalog",
+  "model": "Category",
+  "table": "catalog_category",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "8bce19b9-186c-4c81-94f4-14ca3504f6cf"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "name",
+    "col": "name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 120
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "icon",
+    "col": "icon",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "image",
+    "col": "image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "banner_image",
+    "col": "banner_image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "menu_image",
+    "col": "menu_image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "is_featured",
+    "col": "is_featured",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_trending",
+    "col": "is_trending",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_luxury",
+    "col": "is_luxury",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "category_active_order_idx",
+    "fields": [
+     "is_active",
+     "display_order"
+    ]
+   },
+   {
+    "name": "category_featured_idx",
+    "fields": [
+     "is_featured",
+     "is_active"
+    ]
+   }
+  ],
+  "ordering": [
+   "display_order",
+   "name"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "catalog",
+  "model": "SubCategory",
+  "table": "catalog_subcategory",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "586db1af-84a9-458c-a3da-69e61aa30601"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "category",
+    "col": "category_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "catalog_category",
+    "on_delete": "CASCADE",
+    "related_name": "subcategories",
+    "o2o": false
+   },
+   {
+    "name": "name",
+    "col": "name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 120
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "image",
+    "col": "image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "banner_image",
+    "col": "banner_image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_subcategory_name_per_category",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('category', 'name') name='unique_subcategory_name_per_category'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "subcat_cat_active_order_idx",
+    "fields": [
+     "category",
+     "is_active",
+     "display_order"
+    ]
+   }
+  ],
+  "ordering": [
+   "category__display_order",
+   "display_order",
+   "name"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "catalog",
+  "model": "Brand",
+  "table": "catalog_brand",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "76cc7215-3028-4436-9555-57c523b99dc4"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "name",
+    "col": "name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 120
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "logo",
+    "col": "logo",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "banner",
+    "col": "banner",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "website",
+    "col": "website",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "country",
+    "col": "country",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "founded_year",
+    "col": "founded_year",
+    "type": "PositiveSmallIntegerField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "is_featured",
+    "col": "is_featured",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_luxury",
+    "col": "is_luxury",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "popularity_score",
+    "col": "popularity_score",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "categories",
+    "col": "categories",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "catalog_category",
+    "on_delete": null,
+    "related_name": "brands",
+    "o2o": false
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "brand_active_order_idx",
+    "fields": [
+     "is_active",
+     "display_order"
+    ]
+   },
+   {
+    "name": "brand_popularity_idx",
+    "fields": [
+     "is_active",
+     "-popularity_score"
+    ]
+   },
+   {
+    "name": "brand_luxury_idx",
+    "fields": [
+     "is_luxury",
+     "is_active"
+    ]
+   }
+  ],
+  "ordering": [
+   "display_order",
+   "name"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "catalog",
+  "model": "Collection",
+  "table": "catalog_collection",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "06441768-962c-45f4-8354-30ffe01556b2"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "title",
+    "col": "title",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "type",
+    "col": "type",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 24,
+    "default": "new_arrivals",
+    "choices": [
+     "new_arrivals",
+     "trending",
+     "luxury",
+     "editors_picks",
+     "best_sellers",
+     "festival",
+     "wedding",
+     "summer",
+     "winter"
+    ]
+   },
+   {
+    "name": "image",
+    "col": "image",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "banner",
+    "col": "banner",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "is_featured",
+    "col": "is_featured",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "categories",
+    "col": "categories",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "catalog_category",
+    "on_delete": null,
+    "related_name": "collections",
+    "o2o": false
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "collection_active_order_idx",
+    "fields": [
+     "is_active",
+     "display_order"
+    ]
+   },
+   {
+    "name": "collection_type_idx",
+    "fields": [
+     "type",
+     "is_active"
+    ]
+   }
+  ],
+  "ordering": [
+   "display_order",
+   "title"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "ProductTag",
+  "table": "products_producttag",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "be7c774a-203b-4f20-a043-65f7c7c55ab3"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "name",
+    "col": "name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 80
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   }
+  ],
+  "constraints": [],
+  "indexes": [],
+  "ordering": [
+   "name"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "Product",
+  "table": "products_product",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "ff443dd2-5540-4fe9-a589-fbe5e2612ad9"
+   },
+   {
+    "name": "slug",
+    "col": "slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "meta_title",
+    "col": "meta_title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 70
+   },
+   {
+    "name": "meta_description",
+    "col": "meta_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 170
+   },
+   {
+    "name": "meta_keywords",
+    "col": "meta_keywords",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "name",
+    "col": "name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 200
+   },
+   {
+    "name": "short_description",
+    "col": "short_description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 300
+   },
+   {
+    "name": "long_description",
+    "col": "long_description",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "sku",
+    "col": "sku",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 50
+   },
+   {
+    "name": "barcode",
+    "col": "barcode",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 14
+   },
+   {
+    "name": "category",
+    "col": "category_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "catalog_category",
+    "on_delete": "PROTECT",
+    "related_name": "products",
+    "o2o": false
+   },
+   {
+    "name": "subcategory",
+    "col": "subcategory_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "catalog_subcategory",
+    "on_delete": "PROTECT",
+    "related_name": "products",
+    "o2o": false
+   },
+   {
+    "name": "brand",
+    "col": "brand_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "catalog_brand",
+    "on_delete": "PROTECT",
+    "related_name": "products",
+    "o2o": false
+   },
+   {
+    "name": "collection",
+    "col": "collection_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "catalog_collection",
+    "on_delete": "SET_NULL",
+    "related_name": "products",
+    "o2o": false
+   },
+   {
+    "name": "mrp",
+    "col": "mrp",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "selling_price",
+    "col": "selling_price",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "discount_percentage",
+    "col": "discount_percentage",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_digits": 5,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "discount_amount",
+    "col": "discount_amount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "tax_percentage",
+    "col": "tax_percentage",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 5,
+    "decimal_places": 2,
+    "default": "5.00"
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR",
+    "choices": [
+     "INR",
+     "USD",
+     "EUR",
+     "GBP",
+     "AED"
+    ]
+   },
+   {
+    "name": "gender",
+    "col": "gender",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 12,
+    "default": "unisex",
+    "choices": [
+     "male",
+     "female",
+     "unisex",
+     "other",
+     "undisclosed"
+    ]
+   },
+   {
+    "name": "material",
+    "col": "material",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 16,
+    "choices": [
+     "cotton",
+     "linen",
+     "silk",
+     "wool",
+     "denim",
+     "leather",
+     "polyester",
+     "rayon",
+     "viscose",
+     "georgette",
+     "chiffon",
+     "velvet",
+     "satin",
+     "khadi",
+     "blended",
+     "other"
+    ]
+   },
+   {
+    "name": "fit",
+    "col": "fit",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 12,
+    "choices": [
+     "slim",
+     "regular",
+     "relaxed",
+     "oversized",
+     "bodycon",
+     "a_line",
+     "straight",
+     "tapered"
+    ]
+   },
+   {
+    "name": "sleeve_type",
+    "col": "sleeve_type",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "choices": [
+     "sleeveless",
+     "cap",
+     "short",
+     "three_quarter",
+     "long",
+     "puff",
+     "bell",
+     "na"
+    ]
+   },
+   {
+    "name": "neck_type",
+    "col": "neck_type",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "choices": [
+     "round",
+     "v_neck",
+     "collared",
+     "boat",
+     "square",
+     "halter",
+     "mandarin",
+     "sweetheart",
+     "na"
+    ]
+   },
+   {
+    "name": "pattern",
+    "col": "pattern",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "choices": [
+     "solid",
+     "printed",
+     "floral",
+     "striped",
+     "checked",
+     "embroidered",
+     "colourblock",
+     "animal",
+     "abstract",
+     "woven"
+    ]
+   },
+   {
+    "name": "occasion",
+    "col": "occasion",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 12,
+    "choices": [
+     "casual",
+     "formal",
+     "party",
+     "wedding",
+     "festive",
+     "sports",
+     "lounge",
+     "beach",
+     "work"
+    ]
+   },
+   {
+    "name": "season",
+    "col": "season",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 12,
+    "default": "all_season",
+    "choices": [
+     "summer",
+     "winter",
+     "monsoon",
+     "spring",
+     "autumn",
+     "all_season"
+    ]
+   },
+   {
+    "name": "country_of_origin",
+    "col": "country_of_origin",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "weight_grams",
+    "col": "weight_grams",
+    "type": "PositiveIntegerField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "dimensions",
+    "col": "dimensions",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 60
+   },
+   {
+    "name": "warranty",
+    "col": "warranty",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "care_instructions",
+    "col": "care_instructions",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "return_policy",
+    "col": "return_policy",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 200
+   },
+   {
+    "name": "shipping_info",
+    "col": "shipping_info",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 200
+   },
+   {
+    "name": "estimated_delivery_days",
+    "col": "estimated_delivery_days",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "5"
+   },
+   {
+    "name": "rating_average",
+    "col": "rating_average",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_digits": 3,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "rating_count",
+    "col": "rating_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "review_count",
+    "col": "review_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "wishlist_count",
+    "col": "wishlist_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "view_count",
+    "col": "view_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "purchase_count",
+    "col": "purchase_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "total_stock",
+    "col": "total_stock",
+    "type": "IntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "stock_status",
+    "col": "stock_status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 16,
+    "default": "out_of_stock",
+    "choices": [
+     "in_stock",
+     "low_stock",
+     "out_of_stock",
+     "discontinued"
+    ]
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "is_featured",
+    "col": "is_featured",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_new_arrival",
+    "col": "is_new_arrival",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_best_seller",
+    "col": "is_best_seller",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_trending",
+    "col": "is_trending",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_luxury",
+    "col": "is_luxury",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_recommended",
+    "col": "is_recommended",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "is_returnable",
+    "col": "is_returnable",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "published_at",
+    "col": "published_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "tags",
+    "col": "tags",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "products_producttag",
+    "on_delete": null,
+    "related_name": "products",
+    "o2o": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "product_selling_price_not_above_mrp",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('selling_price__lte', F(mrp))) name='product_selling_price_not_above_mrp'>"
+   },
+   {
+    "name": "product_mrp_not_negative",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('mrp__gte', Decimal('0'))) name='product_mrp_not_negative'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "product_visible_new_idx",
+    "fields": [
+     "is_active",
+     "-published_at"
+    ]
+   },
+   {
+    "name": "product_cat_listing_idx",
+    "fields": [
+     "category",
+     "is_active",
+     "-published_at"
+    ]
+   },
+   {
+    "name": "product_subcat_listing_idx",
+    "fields": [
+     "subcategory",
+     "is_active",
+     "-published_at"
+    ]
+   },
+   {
+    "name": "product_brand_listing_idx",
+    "fields": [
+     "brand",
+     "is_active",
+     "-published_at"
+    ]
+   },
+   {
+    "name": "product_price_idx",
+    "fields": [
+     "is_active",
+     "selling_price"
+    ]
+   },
+   {
+    "name": "product_discount_idx",
+    "fields": [
+     "is_active",
+     "-discount_percentage"
+    ]
+   },
+   {
+    "name": "product_rating_idx",
+    "fields": [
+     "is_active",
+     "-rating_average"
+    ]
+   },
+   {
+    "name": "product_bestseller_idx",
+    "fields": [
+     "is_active",
+     "-purchase_count"
+    ]
+   },
+   {
+    "name": "product_featured_idx",
+    "fields": [
+     "is_featured",
+     "is_active"
+    ]
+   },
+   {
+    "name": "product_trending_idx",
+    "fields": [
+     "is_trending",
+     "is_active"
+    ]
+   },
+   {
+    "name": "product_newarrival_idx",
+    "fields": [
+     "is_new_arrival",
+     "is_active"
+    ]
+   },
+   {
+    "name": "product_luxury_idx",
+    "fields": [
+     "is_luxury",
+     "is_active"
+    ]
+   },
+   {
+    "name": "product_gender_idx",
+    "fields": [
+     "gender",
+     "is_active"
+    ]
+   }
+  ],
+  "ordering": [
+   "-published_at",
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "ProductImage",
+  "table": "products_productimage",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "8a6e6fef-4d93-4f98-97b4-cf342a290e10"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "images",
+    "o2o": false
+   },
+   {
+    "name": "image",
+    "col": "image",
+    "type": "FileField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "thumbnail",
+    "col": "thumbnail",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "alt_text",
+    "col": "alt_text",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 200
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "is_primary",
+    "col": "is_primary",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_primary_image_per_product",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('product',) name='unique_primary_image_per_product' condition=(AND: ('is_primary', True))>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "image_product_order_idx",
+    "fields": [
+     "product",
+     "display_order"
+    ]
+   }
+  ],
+  "ordering": [
+   "-is_primary",
+   "display_order",
+   "id"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "ProductVariant",
+  "table": "products_productvariant",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "bf5b7e9b-f2f6-42d5-8609-a5e8f91c2df9"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "variants",
+    "o2o": false
+   },
+   {
+    "name": "sku",
+    "col": "sku",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": false,
+    "max_length": 50
+   },
+   {
+    "name": "barcode",
+    "col": "barcode",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 14
+   },
+   {
+    "name": "color",
+    "col": "color",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 40
+   },
+   {
+    "name": "color_code",
+    "col": "color_code",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 7
+   },
+   {
+    "name": "size",
+    "col": "size",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 8,
+    "choices": [
+     "XS",
+     "S",
+     "M",
+     "L",
+     "XL",
+     "XXL",
+     "3XL",
+     "FREE",
+     "UK6",
+     "UK7",
+     "UK8",
+     "UK9",
+     "UK10",
+     "UK11"
+    ]
+   },
+   {
+    "name": "stock",
+    "col": "stock",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "reserved_stock",
+    "col": "reserved_stock",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "price_override",
+    "col": "price_override",
+    "type": "DecimalField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "image_override",
+    "col": "image_override",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "weight_grams",
+    "col": "weight_grams",
+    "type": "PositiveIntegerField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_variant_per_product",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('product', 'color', 'size') name='unique_variant_per_product'>"
+   },
+   {
+    "name": "variant_reserved_not_above_stock",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('reserved_stock__lte', F(stock))) name='variant_reserved_not_above_stock'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "variant_product_idx",
+    "fields": [
+     "product",
+     "is_active"
+    ]
+   },
+   {
+    "name": "variant_color_idx",
+    "fields": [
+     "color"
+    ]
+   },
+   {
+    "name": "variant_size_idx",
+    "fields": [
+     "size"
+    ]
+   }
+  ],
+  "ordering": [
+   "product",
+   "color",
+   "size"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "ProductAttribute",
+  "table": "products_productattribute",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "04e10790-7a07-4669-90b7-bf485cde95d9"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "attributes",
+    "o2o": false
+   },
+   {
+    "name": "key",
+    "col": "key",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 80
+   },
+   {
+    "name": "value",
+    "col": "value",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_attribute_key_per_product",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('product', 'key') name='unique_attribute_key_per_product'>"
+   }
+  ],
+  "indexes": [],
+  "ordering": [
+   "key"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "products",
+  "model": "ProductSpecification",
+  "table": "products_productspecification",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "16e68b9a-d4e1-45bf-a67b-86ac08e92995"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "specifications",
+    "o2o": false
+   },
+   {
+    "name": "label",
+    "col": "label",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 80
+   },
+   {
+    "name": "value",
+    "col": "value",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_specification_label_per_product",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('product', 'label') name='unique_specification_label_per_product'>"
+   }
+  ],
+  "indexes": [],
+  "ordering": [
+   "display_order",
+   "label"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "wishlist",
+  "model": "Wishlist",
+  "table": "wishlist_wishlist",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "83adb8de-3333-47ec-a724-04783321d276"
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "OneToOneField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "wishlist",
+    "o2o": true
+   }
+  ],
+  "constraints": [],
+  "indexes": [],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "wishlist",
+  "model": "WishlistItem",
+  "table": "wishlist_wishlistitem",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "65a224a7-a0a4-4eff-a088-826b30c6103d"
+   },
+   {
+    "name": "wishlist",
+    "col": "wishlist_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "wishlist_wishlist",
+    "on_delete": "CASCADE",
+    "related_name": "items",
+    "o2o": false
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "wishlist_items",
+    "o2o": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_product_per_wishlist",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('wishlist', 'product') name='unique_product_per_wishlist'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "wishlistitem_recent_idx",
+    "fields": [
+     "wishlist",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "cart",
+  "model": "Cart",
+  "table": "cart_cart",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "8fe4574f-5870-4246-99e7-6fe2ab5e1135"
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "carts",
+    "o2o": false
+   },
+   {
+    "name": "session_key",
+    "col": "session_key",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 64
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "coupon_code",
+    "col": "coupon_code",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 40
+   },
+   {
+    "name": "coupon_discount",
+    "col": "coupon_discount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR",
+    "choices": [
+     "INR",
+     "USD",
+     "EUR",
+     "GBP",
+     "AED"
+    ]
+   }
+  ],
+  "constraints": [
+   {
+    "name": "cart_owned_by_user_xor_session",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(OR: (AND: ('session_key', ''), ('user__isnull', False)), (AND: ('session_key__gt', ''), ('user__isnull', True))) name='cart_owned_by_user_xor_session'>"
+   },
+   {
+    "name": "unique_active_cart_per_user",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('user',) name='unique_active_cart_per_user' condition=(AND: ('is_active', True), ('user__isnull', False))>"
+   },
+   {
+    "name": "unique_active_cart_per_session",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('session_key',) name='unique_active_cart_per_session' condition=(AND: ('is_active', True), ('user__isnull', True))>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "cart_user_active_idx",
+    "fields": [
+     "user",
+     "is_active"
+    ]
+   },
+   {
+    "name": "cart_session_active_idx",
+    "fields": [
+     "session_key",
+     "is_active"
+    ]
+   },
+   {
+    "name": "cart_abandoned_idx",
+    "fields": [
+     "is_active",
+     "-updated_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-updated_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "cart",
+  "model": "CartItem",
+  "table": "cart_cartitem",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "dc12c39a-cdd8-4fbf-a091-a0cad62f6c62"
+   },
+   {
+    "name": "cart",
+    "col": "cart_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "cart_cart",
+    "on_delete": "CASCADE",
+    "related_name": "items",
+    "o2o": false
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "cart_items",
+    "o2o": false
+   },
+   {
+    "name": "variant",
+    "col": "variant_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_productvariant",
+    "on_delete": "CASCADE",
+    "related_name": "cart_items",
+    "o2o": false
+   },
+   {
+    "name": "quantity",
+    "col": "quantity",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "1"
+   },
+   {
+    "name": "saved_for_later",
+    "col": "saved_for_later",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "unit_price",
+    "col": "unit_price",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "unit_mrp",
+    "col": "unit_mrp",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "discount",
+    "col": "discount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "tax",
+    "col": "tax",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "subtotal",
+    "col": "subtotal",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "total",
+    "col": "total",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_variant_per_cart",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('cart', 'variant') name='unique_variant_per_cart'>"
+   },
+   {
+    "name": "cartitem_quantity_at_least_one",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('quantity__gte', 1)) name='cartitem_quantity_at_least_one'>"
+   },
+   {
+    "name": "cartitem_quantity_within_limit",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('quantity__lte', 10)) name='cartitem_quantity_within_limit'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "cartitem_cart_saved_idx",
+    "fields": [
+     "cart",
+     "saved_for_later"
+    ]
+   }
+  ],
+  "ordering": [
+   "saved_for_later",
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "orders",
+  "model": "Order",
+  "table": "orders_order",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "1b050680-92bd-456b-a5ec-cc3663f2c468"
+   },
+   {
+    "name": "order_number",
+    "col": "order_number",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32
+   },
+   {
+    "name": "invoice_number",
+    "col": "invoice_number",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 32
+   },
+   {
+    "name": "invoice_file",
+    "col": "invoice_file",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "PROTECT",
+    "related_name": "orders",
+    "o2o": false
+   },
+   {
+    "name": "shipping_address",
+    "col": "shipping_address",
+    "type": "JSONField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "billing_address",
+    "col": "billing_address",
+    "type": "JSONField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "subtotal",
+    "col": "subtotal",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "discount",
+    "col": "discount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "coupon_code",
+    "col": "coupon_code",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 40
+   },
+   {
+    "name": "coupon_discount",
+    "col": "coupon_discount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "shipping_charge",
+    "col": "shipping_charge",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "platform_fee",
+    "col": "platform_fee",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "tax",
+    "col": "tax",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "grand_total",
+    "col": "grand_total",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR",
+    "choices": [
+     "INR",
+     "USD",
+     "EUR",
+     "GBP",
+     "AED"
+    ]
+   },
+   {
+    "name": "payment_method",
+    "col": "payment_method",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "default": "cod",
+    "choices": [
+     "card",
+     "upi",
+     "net_banking",
+     "wallet",
+     "cod"
+    ]
+   },
+   {
+    "name": "payment_status",
+    "col": "payment_status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 20,
+    "default": "pending",
+    "choices": [
+     "pending",
+     "authorised",
+     "paid",
+     "failed",
+     "cancelled",
+     "partially_refunded",
+     "refunded"
+    ]
+   },
+   {
+    "name": "payment_reference",
+    "col": "payment_reference",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 20,
+    "default": "pending",
+    "choices": [
+     "pending",
+     "confirmed",
+     "processing",
+     "packed",
+     "shipped",
+     "out_for_delivery",
+     "delivered",
+     "cancelled",
+     "returned",
+     "refunded"
+    ]
+   },
+   {
+    "name": "delivery_status",
+    "col": "delivery_status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 20,
+    "default": "not_dispatched",
+    "choices": [
+     "not_dispatched",
+     "dispatched",
+     "in_transit",
+     "out_for_delivery",
+     "delivered",
+     "failed",
+     "rto"
+    ]
+   },
+   {
+    "name": "delivery_method",
+    "col": "delivery_method",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "default": "standard",
+    "choices": [
+     "standard",
+     "express",
+     "scheduled"
+    ]
+   },
+   {
+    "name": "estimated_delivery_date",
+    "col": "estimated_delivery_date",
+    "type": "DateField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "delivered_at",
+    "col": "delivered_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "cancelled_at",
+    "col": "cancelled_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "cancel_reason",
+    "col": "cancel_reason",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "notes",
+    "col": "notes",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "internal_notes",
+    "col": "internal_notes",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "stock_committed",
+    "col": "stock_committed",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "order_grand_total_not_negative",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('grand_total__gte', Decimal('0'))) name='order_grand_total_not_negative'>"
+   },
+   {
+    "name": "order_subtotal_not_negative",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('subtotal__gte', Decimal('0'))) name='order_subtotal_not_negative'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "order_user_recent_idx",
+    "fields": [
+     "user",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "order_status_idx",
+    "fields": [
+     "status",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "order_payment_idx",
+    "fields": [
+     "payment_status",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "order_delivery_idx",
+    "fields": [
+     "delivery_status",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "orders",
+  "model": "OrderItem",
+  "table": "orders_orderitem",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "11fd8eaf-165a-4b5f-9e26-8716e5921a0b"
+   },
+   {
+    "name": "order",
+    "col": "order_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "orders_order",
+    "on_delete": "CASCADE",
+    "related_name": "items",
+    "o2o": false
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "SET_NULL",
+    "related_name": "order_items",
+    "o2o": false
+   },
+   {
+    "name": "variant",
+    "col": "variant_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_productvariant",
+    "on_delete": "SET_NULL",
+    "related_name": "order_items",
+    "o2o": false
+   },
+   {
+    "name": "product_name",
+    "col": "product_name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 200
+   },
+   {
+    "name": "product_slug",
+    "col": "product_slug",
+    "type": "SlugField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 255
+   },
+   {
+    "name": "brand_name",
+    "col": "brand_name",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 120
+   },
+   {
+    "name": "sku",
+    "col": "sku",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 50
+   },
+   {
+    "name": "size",
+    "col": "size",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16
+   },
+   {
+    "name": "color",
+    "col": "color",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 40
+   },
+   {
+    "name": "image_url",
+    "col": "image_url",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 500
+   },
+   {
+    "name": "mrp",
+    "col": "mrp",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "selling_price",
+    "col": "selling_price",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "discount",
+    "col": "discount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "tax",
+    "col": "tax",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "quantity",
+    "col": "quantity",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "subtotal",
+    "col": "subtotal",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "grand_total",
+    "col": "grand_total",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   }
+  ],
+  "constraints": [
+   {
+    "name": "orderitem_quantity_positive",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('quantity__gte', 1)) name='orderitem_quantity_positive'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "orderitem_order_idx",
+    "fields": [
+     "order"
+    ]
+   },
+   {
+    "name": "orderitem_sku_idx",
+    "fields": [
+     "sku"
+    ]
+   }
+  ],
+  "ordering": [
+   "id"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "orders",
+  "model": "OrderStatusHistory",
+  "table": "orders_orderstatushistory",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "a6459bf0-e2b2-41ce-a8c0-1700109eeed7"
+   },
+   {
+    "name": "order",
+    "col": "order_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "orders_order",
+    "on_delete": "CASCADE",
+    "related_name": "status_history",
+    "o2o": false
+   },
+   {
+    "name": "previous_status",
+    "col": "previous_status",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 20,
+    "choices": [
+     "pending",
+     "confirmed",
+     "processing",
+     "packed",
+     "shipped",
+     "out_for_delivery",
+     "delivered",
+     "cancelled",
+     "returned",
+     "refunded"
+    ]
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 20,
+    "choices": [
+     "pending",
+     "confirmed",
+     "processing",
+     "packed",
+     "shipped",
+     "out_for_delivery",
+     "delivered",
+     "cancelled",
+     "returned",
+     "refunded"
+    ]
+   },
+   {
+    "name": "changed_by",
+    "col": "changed_by_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "SET_NULL",
+    "related_name": "order_status_changes",
+    "o2o": false
+   },
+   {
+    "name": "remarks",
+    "col": "remarks",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "statushistory_order_idx",
+    "fields": [
+     "order",
+     "created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "created_at",
+   "id"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "orders",
+  "model": "Shipment",
+  "table": "orders_shipment",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "4d74f642-8482-4b7f-bddb-38bda35a2170"
+   },
+   {
+    "name": "order",
+    "col": "order_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "orders_order",
+    "on_delete": "CASCADE",
+    "related_name": "shipments",
+    "o2o": false
+   },
+   {
+    "name": "courier_name",
+    "col": "courier_name",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "tracking_number",
+    "col": "tracking_number",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 64
+   },
+   {
+    "name": "tracking_url",
+    "col": "tracking_url",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 500
+   },
+   {
+    "name": "dispatched_at",
+    "col": "dispatched_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "expected_delivery_date",
+    "col": "expected_delivery_date",
+    "type": "DateField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "delivered_at",
+    "col": "delivered_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "remarks",
+    "col": "remarks",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "shipment_order_idx",
+    "fields": [
+     "order",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "coupons",
+  "model": "Coupon",
+  "table": "coupons_coupon",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "d6ff440a-6d60-4203-a007-42d3842eeff4"
+   },
+   {
+    "name": "code",
+    "col": "code",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 40
+   },
+   {
+    "name": "description",
+    "col": "description",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "discount_type",
+    "col": "discount_type",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 16,
+    "default": "percentage",
+    "choices": [
+     "flat",
+     "percentage",
+     "free_shipping"
+    ]
+   },
+   {
+    "name": "value",
+    "col": "value",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "max_discount",
+    "col": "max_discount",
+    "type": "DecimalField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "min_cart_value",
+    "col": "min_cart_value",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR"
+   },
+   {
+    "name": "max_uses",
+    "col": "max_uses",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "uses_per_user",
+    "col": "uses_per_user",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "1"
+   },
+   {
+    "name": "times_used",
+    "col": "times_used",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "valid_from",
+    "col": "valid_from",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "2026-08-05 11:30:23.412476+00:00"
+   },
+   {
+    "name": "valid_until",
+    "col": "valid_until",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "is_active",
+    "col": "is_active",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "is_public",
+    "col": "is_public",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "True"
+   },
+   {
+    "name": "first_order_only",
+    "col": "first_order_only",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "categories",
+    "col": "categories",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "catalog_category",
+    "on_delete": null,
+    "related_name": "coupons",
+    "o2o": false
+   },
+   {
+    "name": "brands",
+    "col": "brands",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "catalog_brand",
+    "on_delete": null,
+    "related_name": "coupons",
+    "o2o": false
+   },
+   {
+    "name": "products",
+    "col": "products",
+    "type": "ManyToManyField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "fk": "products_product",
+    "on_delete": null,
+    "related_name": "coupons",
+    "o2o": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "coupon_value_not_negative",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('value__gte', Decimal('0'))) name='coupon_value_not_negative'>"
+   },
+   {
+    "name": "coupon_min_cart_not_negative",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('min_cart_value__gte', Decimal('0'))) name='coupon_min_cart_not_negative'>"
+   },
+   {
+    "name": "coupon_window_ordered",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(OR: ('valid_until__isnull', True), ('valid_until__gt', F(valid_from))) name='coupon_window_ordered'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "coupon_window_idx",
+    "fields": [
+     "is_active",
+     "valid_from",
+     "valid_until"
+    ]
+   },
+   {
+    "name": "coupon_public_idx",
+    "fields": [
+     "is_public",
+     "is_active"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "coupons",
+  "model": "CouponUsage",
+  "table": "coupons_couponusage",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "1cdfa9c1-17b3-49a9-a36c-b4a006e0bd4d"
+   },
+   {
+    "name": "coupon",
+    "col": "coupon_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "coupons_coupon",
+    "on_delete": "CASCADE",
+    "related_name": "usages",
+    "o2o": false
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "coupon_usages",
+    "o2o": false
+   },
+   {
+    "name": "order",
+    "col": "order_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "orders_order",
+    "on_delete": "CASCADE",
+    "related_name": "coupon_usages",
+    "o2o": false
+   },
+   {
+    "name": "discount_amount",
+    "col": "discount_amount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "is_released",
+    "col": "is_released",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "released_at",
+    "col": "released_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_coupon_usage_per_order",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('coupon', 'order') name='unique_coupon_usage_per_order' condition=(AND: ('order__isnull', False))>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "couponusage_coupon_user_idx",
+    "fields": [
+     "coupon",
+     "user"
+    ]
+   },
+   {
+    "name": "couponusage_user_idx",
+    "fields": [
+     "user",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "payments",
+  "model": "Payment",
+  "table": "payments_payment",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "5e2a6665-210f-46eb-b1cb-21cbd56cef0e"
+   },
+   {
+    "name": "order",
+    "col": "order_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "orders_order",
+    "on_delete": "PROTECT",
+    "related_name": "payments",
+    "o2o": false
+   },
+   {
+    "name": "gateway",
+    "col": "gateway",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 32
+   },
+   {
+    "name": "method",
+    "col": "method",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 32
+   },
+   {
+    "name": "gateway_order_id",
+    "col": "gateway_order_id",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 100
+   },
+   {
+    "name": "gateway_payment_id",
+    "col": "gateway_payment_id",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 100
+   },
+   {
+    "name": "gateway_signature",
+    "col": "gateway_signature",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "transaction_id",
+    "col": "transaction_id",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 100
+   },
+   {
+    "name": "reference_number",
+    "col": "reference_number",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 64
+   },
+   {
+    "name": "amount",
+    "col": "amount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "refunded_amount",
+    "col": "refunded_amount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2,
+    "default": "0.00"
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR"
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 24,
+    "default": "created",
+    "choices": [
+     "created",
+     "authorised",
+     "captured",
+     "failed",
+     "cancelled",
+     "refunded",
+     "partially_refunded"
+    ]
+   },
+   {
+    "name": "failure_reason",
+    "col": "failure_reason",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "captured_at",
+    "col": "captured_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "raw_response",
+    "col": "raw_response",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_gateway_payment_id",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('gateway', 'gateway_payment_id') name='unique_gateway_payment_id' condition=(AND: ('gateway_payment_id__gt', ''))>"
+   },
+   {
+    "name": "unique_gateway_order_id",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('gateway', 'gateway_order_id') name='unique_gateway_order_id' condition=(AND: ('gateway_order_id__gt', ''))>"
+   },
+   {
+    "name": "payment_refund_within_amount",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('refunded_amount__lte', F(amount))) name='payment_refund_within_amount'>"
+   },
+   {
+    "name": "payment_amount_positive",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('amount__gt', Decimal('0'))) name='payment_amount_positive'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "payment_order_idx",
+    "fields": [
+     "order",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "payment_status_idx",
+    "fields": [
+     "status",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "payment_gateway_idx",
+    "fields": [
+     "gateway",
+     "status"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "payments",
+  "model": "PaymentAttempt",
+  "table": "payments_paymentattempt",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "d39df0af-29c6-4e57-a64b-4440c760ab70"
+   },
+   {
+    "name": "payment",
+    "col": "payment_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "payments_payment",
+    "on_delete": "CASCADE",
+    "related_name": "attempts",
+    "o2o": false
+   },
+   {
+    "name": "attempt_number",
+    "col": "attempt_number",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "1"
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 16,
+    "default": "started",
+    "choices": [
+     "started",
+     "succeeded",
+     "failed",
+     "abandoned"
+    ]
+   },
+   {
+    "name": "failure_reason",
+    "col": "failure_reason",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "failure_code",
+    "col": "failure_code",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 64
+   },
+   {
+    "name": "retry_count",
+    "col": "retry_count",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "gateway_response",
+    "col": "gateway_response",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_attempt_number_per_payment",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('payment', 'attempt_number') name='unique_attempt_number_per_payment'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "attempt_payment_idx",
+    "fields": [
+     "payment",
+     "attempt_number"
+    ]
+   }
+  ],
+  "ordering": [
+   "payment",
+   "attempt_number"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "payments",
+  "model": "Refund",
+  "table": "payments_refund",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "db314170-5ac9-461e-8df9-f7c393e5ab6d"
+   },
+   {
+    "name": "payment",
+    "col": "payment_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "payments_payment",
+    "on_delete": "PROTECT",
+    "related_name": "refunds",
+    "o2o": false
+   },
+   {
+    "name": "amount",
+    "col": "amount",
+    "type": "DecimalField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_digits": 12,
+    "decimal_places": 2
+   },
+   {
+    "name": "currency",
+    "col": "currency",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 3,
+    "default": "INR"
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 16,
+    "default": "pending",
+    "choices": [
+     "pending",
+     "processing",
+     "processed",
+     "failed"
+    ]
+   },
+   {
+    "name": "reason",
+    "col": "reason",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 24,
+    "default": "other",
+    "choices": [
+     "order_cancelled",
+     "order_returned",
+     "item_unavailable",
+     "damaged",
+     "goodwill",
+     "duplicate",
+     "other"
+    ]
+   },
+   {
+    "name": "notes",
+    "col": "notes",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "gateway_refund_id",
+    "col": "gateway_refund_id",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 100
+   },
+   {
+    "name": "reference_number",
+    "col": "reference_number",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 64
+   },
+   {
+    "name": "processed_at",
+    "col": "processed_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "raw_response",
+    "col": "raw_response",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_gateway_refund_id",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('gateway_refund_id',) name='unique_gateway_refund_id' condition=(AND: ('gateway_refund_id__gt', ''))>"
+   },
+   {
+    "name": "refund_amount_positive",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('amount__gt', Decimal('0'))) name='refund_amount_positive'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "refund_payment_idx",
+    "fields": [
+     "payment",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "refund_status_idx",
+    "fields": [
+     "status",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "payments",
+  "model": "PaymentWebhookLog",
+  "table": "payments_paymentwebhooklog",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "47cfe1a4-5a04-4367-a376-95a1671df35d"
+   },
+   {
+    "name": "gateway",
+    "col": "gateway",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 32
+   },
+   {
+    "name": "event_id",
+    "col": "event_id",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 200
+   },
+   {
+    "name": "event_type",
+    "col": "event_type",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 64
+   },
+   {
+    "name": "signature",
+    "col": "signature",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "is_verified",
+    "col": "is_verified",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "False"
+   },
+   {
+    "name": "is_duplicate",
+    "col": "is_duplicate",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "payload",
+    "col": "payload",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   },
+   {
+    "name": "headers",
+    "col": "headers",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   },
+   {
+    "name": "processed_at",
+    "col": "processed_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "error",
+    "col": "error",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "payment",
+    "col": "payment_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "payments_payment",
+    "on_delete": "SET_NULL",
+    "related_name": "webhook_logs",
+    "o2o": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_webhook_event",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('gateway', 'event_id') name='unique_webhook_event'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "webhook_type_idx",
+    "fields": [
+     "gateway",
+     "event_type"
+    ]
+   },
+   {
+    "name": "webhook_recent_idx",
+    "fields": [
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "reviews",
+  "model": "Review",
+  "table": "reviews_review",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "4a9cf323-0297-42e7-9a0b-298438eeb7a2"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "reviews",
+    "o2o": false
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "reviews",
+    "o2o": false
+   },
+   {
+    "name": "order_item",
+    "col": "order_item_id",
+    "type": "OneToOneField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "fk": "orders_orderitem",
+    "on_delete": "SET_NULL",
+    "related_name": "review",
+    "o2o": true
+   },
+   {
+    "name": "rating",
+    "col": "rating",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "choices": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "name": "title",
+    "col": "title",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 120
+   },
+   {
+    "name": "body",
+    "col": "body",
+    "type": "TextField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 5000
+   },
+   {
+    "name": "is_verified_purchase",
+    "col": "is_verified_purchase",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 12,
+    "default": "pending",
+    "choices": [
+     "pending",
+     "approved",
+     "rejected"
+    ]
+   },
+   {
+    "name": "moderated_by",
+    "col": "moderated_by_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "SET_NULL",
+    "related_name": "moderated_reviews",
+    "o2o": false
+   },
+   {
+    "name": "moderated_at",
+    "col": "moderated_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "rejection_reason",
+    "col": "rejection_reason",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "helpful_count",
+    "col": "helpful_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_review_per_order_item",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('order_item',) name='unique_review_per_order_item' condition=(AND: ('order_item__isnull', False))>"
+   },
+   {
+    "name": "review_rating_within_range",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(AND: ('rating__gte', 1), ('rating__lte', 5)) name='review_rating_within_range'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "review_product_idx",
+    "fields": [
+     "product",
+     "status",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "review_helpful_idx",
+    "fields": [
+     "product",
+     "status",
+     "-helpful_count"
+    ]
+   },
+   {
+    "name": "review_user_idx",
+    "fields": [
+     "user",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "review_queue_idx",
+    "fields": [
+     "status",
+     "-created_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "reviews",
+  "model": "ReviewImage",
+  "table": "reviews_reviewimage",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "79504e96-6be4-461c-97e7-897f885d30c3"
+   },
+   {
+    "name": "review",
+    "col": "review_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "reviews_review",
+    "on_delete": "CASCADE",
+    "related_name": "images",
+    "o2o": false
+   },
+   {
+    "name": "image",
+    "col": "image",
+    "type": "FileField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "thumbnail",
+    "col": "thumbnail",
+    "type": "FileField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 100
+   },
+   {
+    "name": "caption",
+    "col": "caption",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 150
+   },
+   {
+    "name": "display_order",
+    "col": "display_order",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "reviewimage_order_idx",
+    "fields": [
+     "review",
+     "display_order"
+    ]
+   }
+  ],
+  "ordering": [
+   "display_order",
+   "id"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "reviews",
+  "model": "HelpfulVote",
+  "table": "reviews_helpfulvote",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "e0441217-c2dd-4656-a0ec-f1bd90f774f4"
+   },
+   {
+    "name": "review",
+    "col": "review_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "reviews_review",
+    "on_delete": "CASCADE",
+    "related_name": "helpful_votes",
+    "o2o": false
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "helpful_votes",
+    "o2o": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_helpful_vote_per_user",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('review', 'user') name='unique_helpful_vote_per_user'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "helpfulvote_lookup_idx",
+    "fields": [
+     "review",
+     "user"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "recommendations",
+  "model": "RecentlyViewed",
+  "table": "recommendations_recentlyviewed",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "3e5b52e0-4df9-453c-ba05-f8a5dcd4d043"
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "recently_viewed",
+    "o2o": false
+   },
+   {
+    "name": "session_key",
+    "col": "session_key",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 64
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "recent_views",
+    "o2o": false
+   },
+   {
+    "name": "viewed_at",
+    "col": "viewed_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "view_count",
+    "col": "view_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "1"
+   }
+  ],
+  "constraints": [
+   {
+    "name": "recentlyviewed_owned_by_user_xor_session",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(OR: (AND: ('session_key', ''), ('user__isnull', False)), (AND: ('session_key__gt', ''), ('user__isnull', True))) name='recentlyviewed_owned_by_user_xor_session'>"
+   },
+   {
+    "name": "unique_recent_view_per_user",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('user', 'product') name='unique_recent_view_per_user' condition=(AND: ('user__isnull', False))>"
+   },
+   {
+    "name": "unique_recent_view_per_session",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('session_key', 'product') name='unique_recent_view_per_session' condition=(AND: ('user__isnull', True))>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "recentview_user_idx",
+    "fields": [
+     "user",
+     "-viewed_at"
+    ]
+   },
+   {
+    "name": "recentview_session_idx",
+    "fields": [
+     "session_key",
+     "-viewed_at"
+    ]
+   },
+   {
+    "name": "recentview_cleanup_idx",
+    "fields": [
+     "viewed_at"
+    ]
+   }
+  ],
+  "ordering": [
+   "-viewed_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "recommendations",
+  "model": "ProductAffinity",
+  "table": "recommendations_productaffinity",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "38d1e1ba-9e24-4d01-ab7a-db708bcefc66"
+   },
+   {
+    "name": "product",
+    "col": "product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "affinities",
+    "o2o": false
+   },
+   {
+    "name": "related_product",
+    "col": "related_product_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "products_product",
+    "on_delete": "CASCADE",
+    "related_name": "reverse_affinities",
+    "o2o": false
+   },
+   {
+    "name": "co_purchase_count",
+    "col": "co_purchase_count",
+    "type": "PositiveIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0"
+   },
+   {
+    "name": "score",
+    "col": "score",
+    "type": "FloatField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "0.0"
+   },
+   {
+    "name": "computed_at",
+    "col": "computed_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "unique_product_affinity",
+    "cls": "UniqueConstraint",
+    "detail": "<UniqueConstraint: fields=('product', 'related_product') name='unique_product_affinity'>"
+   },
+   {
+    "name": "affinity_not_self_referential",
+    "cls": "CheckConstraint",
+    "detail": "<CheckConstraint: condition=(NOT (AND: ('product', F(related_product)))) name='affinity_not_self_referential'>"
+   }
+  ],
+  "indexes": [
+   {
+    "name": "affinity_lookup_idx",
+    "fields": [
+     "product",
+     "-score"
+    ]
+   }
+  ],
+  "ordering": [
+   "-score",
+   "-co_purchase_count"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "notifications",
+  "model": "Notification",
+  "table": "notifications_notification",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "fb87d9b6-c8d3-4d3d-b78b-38bc62578c4b"
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "ForeignKey",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "notifications",
+    "o2o": false
+   },
+   {
+    "name": "event",
+    "col": "event",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 64
+   },
+   {
+    "name": "category",
+    "col": "category",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 16,
+    "default": "system",
+    "choices": [
+     "account",
+     "order",
+     "payment",
+     "review",
+     "marketing",
+     "system"
+    ]
+   },
+   {
+    "name": "channel",
+    "col": "channel",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 8,
+    "default": "in_app",
+    "choices": [
+     "in_app",
+     "email",
+     "sms",
+     "push"
+    ]
+   },
+   {
+    "name": "subject",
+    "col": "subject",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 200
+   },
+   {
+    "name": "body",
+    "col": "body",
+    "type": "TextField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "link",
+    "col": "link",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   },
+   {
+    "name": "context",
+    "col": "context",
+    "type": "JSONField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "{}"
+   },
+   {
+    "name": "status",
+    "col": "status",
+    "type": "CharField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "max_length": 12,
+    "default": "pending",
+    "choices": [
+     "pending",
+     "sent",
+     "failed",
+     "delivered"
+    ]
+   },
+   {
+    "name": "is_read",
+    "col": "is_read",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": true,
+    "default": "False"
+   },
+   {
+    "name": "read_at",
+    "col": "read_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "sent_at",
+    "col": "sent_at",
+    "type": "DateTimeField",
+    "null": true,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "attempts",
+    "col": "attempts",
+    "type": "PositiveSmallIntegerField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "0"
+   },
+   {
+    "name": "error",
+    "col": "error",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   }
+  ],
+  "constraints": [],
+  "indexes": [
+   {
+    "name": "notif_inbox_idx",
+    "fields": [
+     "user",
+     "is_read",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "notif_queue_idx",
+    "fields": [
+     "status",
+     "channel"
+    ]
+   },
+   {
+    "name": "notif_event_idx",
+    "fields": [
+     "event",
+     "-created_at"
+    ]
+   },
+   {
+    "name": "notif_dedupe_idx",
+    "fields": [
+     "user",
+     "event"
+    ]
+   }
+  ],
+  "ordering": [
+   "-created_at"
+  ],
+  "unique_together": []
+ },
+ {
+  "app": "notifications",
+  "model": "NotificationPreference",
+  "table": "notifications_notificationpreference",
+  "abstract": false,
+  "fields": [
+   {
+    "name": "id",
+    "col": "id",
+    "type": "BigAutoField",
+    "null": false,
+    "blank": true,
+    "pk": true,
+    "unique": true,
+    "db_index": false
+   },
+   {
+    "name": "created_at",
+    "col": "created_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": true
+   },
+   {
+    "name": "updated_at",
+    "col": "updated_at",
+    "type": "DateTimeField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false
+   },
+   {
+    "name": "uuid",
+    "col": "uuid",
+    "type": "UUIDField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "max_length": 32,
+    "default": "2643fabf-7d73-4671-b7d6-adc64f343dad"
+   },
+   {
+    "name": "user",
+    "col": "user_id",
+    "type": "OneToOneField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": true,
+    "db_index": true,
+    "fk": "users_user",
+    "on_delete": "CASCADE",
+    "related_name": "notification_preference",
+    "o2o": true
+   },
+   {
+    "name": "email_enabled",
+    "col": "email_enabled",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "sms_enabled",
+    "col": "sms_enabled",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "push_enabled",
+    "col": "push_enabled",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "marketing_enabled",
+    "col": "marketing_enabled",
+    "type": "BooleanField",
+    "null": false,
+    "blank": false,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "default": "True"
+   },
+   {
+    "name": "push_token",
+    "col": "push_token",
+    "type": "CharField",
+    "null": false,
+    "blank": true,
+    "pk": false,
+    "unique": false,
+    "db_index": false,
+    "max_length": 255
+   }
+  ],
+  "constraints": [],
+  "indexes": [],
+  "ordering": [],
+  "unique_together": []
+ }
+]
