@@ -112,14 +112,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <RecentlyViewedTracker
-        slug={product.slug}
-        title={product.name}
-        brand={product.brand}
-        image={product.image}
-        price={product.compareAtPrice ?? product.price}
-        discountedPrice={product.price}
-      />
+      <RecentlyViewedTracker slug={product.slug} />
       <JsonLd
         data={{
           "@context": "https://schema.org",

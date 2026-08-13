@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Sparkles, User } from "lucide-react";
+import { Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MegaMenu } from "@/components/layout/MegaMenu";
@@ -20,22 +18,12 @@ import { CartDrawer } from "@/components/cart/CartDrawer";
 import { useScroll } from "@/hooks/use-scroll";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
-import {
-  disableDemoMode,
-  enableDemoMode,
-  isDemoModeEnabled,
-} from "@/lib/demoMode";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const scrolled = useScroll();
   const { count: wishlistCount } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
-  const [demoOn, setDemoOn] = useState(false);
-
-  useEffect(() => {
-    setDemoOn(isDemoModeEnabled());
-  }, []);
 
   return (
     <header
@@ -103,13 +91,6 @@ export function Navbar() {
               {isAuthenticated && (
                 <DropdownMenuItem onSelect={() => logout()}>Logout</DropdownMenuItem>
               )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onSelect={() => (demoOn ? disableDemoMode() : enableDemoMode())}
-              >
-                <Sparkles className="text-accent" />
-                {demoOn ? "Disable Demo Mode" : "Enable Demo Mode"}
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <CartDrawer />

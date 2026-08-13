@@ -70,6 +70,11 @@ export interface FilterFacets {
   occasions: string[];
   priceMin: number;
   priceMax: number;
+  // Backend-facet brand slug -> display name (e.g. /products/filters/ already
+  // returns {name, slug, product_count} per brand). Optional so the older
+  // client-side computeFacets() in lib/filters.ts, which has no names to
+  // offer, doesn't need to supply it.
+  brandNames?: Record<string, string>;
 }
 
 export type SortKey =

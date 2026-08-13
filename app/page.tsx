@@ -6,9 +6,15 @@ import { ShopByCategory } from "@/components/home/ShopByCategory";
 import { ProductCarouselSection } from "@/components/home/ProductCarouselSection";
 import { FeaturedBrands } from "@/components/home/FeaturedBrands";
 import { NewArrivals } from "@/components/home/NewArrivals";
-import { publicGet } from "@/lib/api";
-import { apiProductCardsToProducts } from "@/lib/apiAdapters";
-import type { ApiHomepageProducts } from "@/types/api";
+import { publicGet, publicGetPaged } from "@/lib/api";
+import {
+  apiBrandToEditorialBanner,
+  apiBrandToHomeBrand,
+  apiCategoryToHomeCategory,
+  apiCollectionToEditorialBanner,
+  apiProductCardsToProducts,
+} from "@/lib/apiAdapters";
+import type { ApiBrand, ApiCategory, ApiCollection, ApiHomepageProducts } from "@/types/api";
 
 // Product rails are live backend data — always render at request time
 // rather than being baked into the build as a static shell.
@@ -72,15 +78,36 @@ const EMPTY_HOMEPAGE: ApiHomepageProducts = {
 };
 
 export default async function Home() {
-  const rails = await publicGet<ApiHomepageProducts>("/products/homepage/", 60).catch(
-    () => EMPTY_HOMEPAGE
-  );
+  const [rails, categoriesRes, featuredBrandsRes, editorsPicksRes, luxuryBrandsRes] =
+    await Promise.all([
+      publicGet<ApiHomepageProducts>("/products/homepage/", 60).catch(() => EMPTY_HOMEPAGE),
+      publicGetPaged<ApiCategory[]>("/categories/", 300).catch(() => ({
+        data: [] as ApiCategory[],
+        pagination: undefined,
+      })),
+      publicGetPaged<ApiBrand[]>("/brands/featured/", 300).catch(() => ({
+        data: [] as ApiBrand[],
+        pagination: undefined,
+      })),
+      publicGetPaged<ApiCollection[]>("/collections/editors-picks/", 300).catch(() => ({
+        data: [] as ApiCollection[],
+        pagination: undefined,
+      })),
+      publicGetPaged<ApiBrand[]>("/brands/luxury/", 300).catch(() => ({
+        data: [] as ApiBrand[],
+        pagination: undefined,
+      })),
+    ]);
 
   const trendingProducts = apiProductCardsToProducts(rails.trending);
   const bestSellerProducts = apiProductCardsToProducts(rails.best_sellers);
   const trendingWeekProducts = apiProductCardsToProducts(rails.trending_this_week);
   const newArrivalProducts = apiProductCardsToProducts(rails.new_arrivals);
   const flashSaleProducts = apiProductCardsToProducts(rails.flash_sale);
+  const categories = categoriesRes.data.map(apiCategoryToHomeCategory);
+  const featuredBrands = featuredBrandsRes.data.map(apiBrandToHomeBrand);
+  const editorsPicks = editorsPicksRes.data.map(apiCollectionToEditorialBanner);
+  const luxuryBanners = luxuryBrandsRes.data.map(apiBrandToEditorialBanner);
 
   return (
     <>
@@ -98,7 +125,7 @@ export default async function Home() {
         }}
       />
       <HeroCarousel />
-      <ShopByCategory />
+      <ShopByCategory categories={categories} />
       <ProductCarouselSection
         eyebrow="Hot Right Now"
         title="Trending Now"
@@ -106,7 +133,7 @@ export default async function Home() {
         viewAllHref="/new-in"
         products={trendingProducts}
       />
-      <FeaturedBrands />
+      <FeaturedBrands brands={featuredBrands} />
       <NewArrivals products={newArrivalProducts} />
       <ProductCarouselSection
         eyebrow="Customer Favorites"
@@ -116,9 +143,9 @@ export default async function Home() {
         products={bestSellerProducts}
         tinted
       />
-      <LuxuryCollection />
+      <LuxuryCollection banners={luxuryBanners} />
       <FlashSale products={flashSaleProducts} />
-      <EditorsPicks />
+      <EditorsPicks picks={editorsPicks} />
       <ProductCarouselSection
         eyebrow="Don't Miss Out"
         title="Trending This Week"

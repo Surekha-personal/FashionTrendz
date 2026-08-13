@@ -16,12 +16,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ProductCard } from "@/components/product/ProductCard";
+import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { ProductFilters } from "@/components/product/ProductFilters";
 import { SortSelect } from "@/components/product/SortSelect";
 import { JsonLd } from "@/components/common/JsonLd";
-import { EmptyState } from "@/components/common/EmptyState";
-import { Button } from "@/components/ui/button";
-import { SearchX } from "lucide-react";
 import type { SearchParamsRecord } from "@/lib/filters";
 import type { FilterFacets } from "@/types/catalog";
 import type { Product } from "@/types/product";
@@ -145,16 +143,7 @@ export function ProductListingLayout({
           </div>
 
           {cardProducts.length === 0 ? (
-            <EmptyState
-              icon={SearchX}
-              title="No products found"
-              description={emptyMessage}
-              action={
-                <Button asChild variant="outline">
-                  <Link href={basePath}>Clear Filters</Link>
-                </Button>
-              }
-            />
+            <ProductEmptyState description={emptyMessage} basePath={basePath} />
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 xl:grid-cols-4">
               {cardProducts.map((product) => (

@@ -7,9 +7,11 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { fadeInUp, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { editorsPicks } from "@/data/editorial";
+import type { EditorialBanner } from "@/types/home";
 
-export function EditorsPicks() {
+export function EditorsPicks({ picks }: { picks: EditorialBanner[] }) {
+  if (picks.length === 0) return null;
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <SectionHeading
@@ -24,7 +26,7 @@ export function EditorsPicks() {
         viewport={viewportOnce}
         className="grid grid-cols-1 gap-6 sm:grid-cols-2"
       >
-        {editorsPicks.map((pick, index) => (
+        {picks.map((pick, index) => (
           <motion.div
             key={pick.id}
             variants={fadeInUp}

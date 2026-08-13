@@ -1,22 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { recordRecentlyViewed } from "@/lib/recentlyViewed";
+import { recordRecentlyViewed } from "@/lib/apiCatalog";
 
-interface RecentlyViewedTrackerProps {
-  slug: string;
-  title: string;
-  brand: string;
-  image: string;
-  price: number;
-  discountedPrice: number;
-}
-
-export function RecentlyViewedTracker(props: RecentlyViewedTrackerProps) {
+export function RecentlyViewedTracker({ slug }: { slug: string }) {
   useEffect(() => {
-    recordRecentlyViewed(props);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.slug]);
+    recordRecentlyViewed(slug);
+  }, [slug]);
 
   return null;
 }

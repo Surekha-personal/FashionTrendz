@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getBrandBySlug } from "@/data/catalog/brands";
 import { parseFilterState } from "@/lib/filters";
 import { cn } from "@/lib/utils";
 import type { FilterFacets, Gender } from "@/types/catalog";
@@ -79,7 +78,7 @@ export function ProductFilters({
   const activeChips: { key: string; label: string; onRemove: () => void }[] = [
     ...state.brands.map((slug) => ({
       key: `brand-${slug}`,
-      label: getBrandBySlug(slug)?.name ?? slug,
+      label: facets.brandNames?.[slug] ?? slug,
       onRemove: () => toggleCsv("brand", slug, state.brands),
     })),
     ...state.colors.map((c) => ({
@@ -267,7 +266,7 @@ export function ProductFilters({
                     checked={state.brands.includes(slug)}
                     onCheckedChange={() => toggleCsv("brand", slug, state.brands)}
                   />
-                  {getBrandBySlug(slug)?.name ?? slug}
+                  {facets.brandNames?.[slug] ?? slug}
                 </Label>
               ))}
             </div>

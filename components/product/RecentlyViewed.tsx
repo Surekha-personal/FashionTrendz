@@ -2,36 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { ProductCarouselSection } from "@/components/home/ProductCarouselSection";
-import { getRecentlyViewed, type RecentlyViewedEntry } from "@/lib/recentlyViewed";
+import { fetchRecentlyViewed } from "@/lib/apiCatalog";
 import type { Product } from "@/types/product";
 
-function toCardProduct(entry: RecentlyViewedEntry): Product {
-  return {
-    id: entry.slug,
-    slug: entry.slug,
-    name: entry.title,
-    brand: entry.brand,
-    price: entry.discountedPrice,
-    compareAtPrice: entry.price > entry.discountedPrice ? entry.price : undefined,
-    image: entry.image,
-    imageAlt: `${entry.title} by ${entry.brand}`,
-  };
-}
-
 export function RecentlyViewed({ excludeSlug }: { excludeSlug?: string }) {
-  const [entries, setEntries] = useState<RecentlyViewedEntry[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    setEntries(getRecentlyViewed(excludeSlug));
+    // The backend returns most-recent-first for the caller (guest session or
+    // signed-in user) and has no exclude-current-product filter, so the page
+    // currently being viewed — just recorded by RecentlyViewedTracker — is
+    // filtered out client-side instead.
+    fetchRecentlyViewed()
+      .then((items) => setProducts(items.filter((p) => p.slug !== excludeSlug)))
+      .catch(() => setProducts([]));
   }, [excludeSlug]);
 
-  if (entries.length === 0) return null;
+  if (products.length === 0) return null;
 
   return (
     <ProductCarouselSection
       eyebrow="Your History"
       title="Recently Viewed"
-      products={entries.map(toCardProduct)}
+      products={products}
     />
   );
 }

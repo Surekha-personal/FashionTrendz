@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { fadeInUp, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { luxuryBanners } from "@/data/editorial";
+import type { EditorialBanner } from "@/types/home";
 
-export function LuxuryCollection() {
+export function LuxuryCollection({ banners }: { banners: EditorialBanner[] }) {
+  if (banners.length === 0) return null;
+
   return (
     <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-16 sm:px-6 lg:px-8">
-      {luxuryBanners.map((banner, index) => (
+      {banners.map((banner, index) => (
         <motion.div
           key={banner.id}
           variants={fadeInUp}

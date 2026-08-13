@@ -8,8 +8,12 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/utils/format";
 import { POPULAR_SEARCHES } from "@/lib/search";
-import { brands as popularBrands } from "@/data/brands";
-import { getRecentlyViewed } from "@/lib/recentlyViewed";
+import { api } from "@/lib/api";
+import { apiBrandToHomeBrand } from "@/lib/apiAdapters";
+import { fetchRecentlyViewed } from "@/lib/apiCatalog";
+import type { ApiBrand } from "@/types/api";
+import type { Brand as HomeBrand } from "@/types/home";
+import type { Product } from "@/types/product";
 
 interface SearchBarProps {
   className?: string;
@@ -70,9 +74,8 @@ export function SearchBar({
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
-  const [recentlyViewed, setRecentlyViewed] = useState<
-    ReturnType<typeof getRecentlyViewed>
-  >([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+  const [popularBrands, setPopularBrands] = useState<HomeBrand[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestions>(EMPTY_SUGGESTIONS);
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -82,7 +85,13 @@ export function SearchBar({
     } catch {
       setRecent([]);
     }
-    setRecentlyViewed(getRecentlyViewed().slice(0, 4));
+    fetchRecentlyViewed(4)
+      .then(setRecentlyViewed)
+      .catch(() => setRecentlyViewed([]));
+    api
+      .get<ApiBrand[]>("/brands/popular/")
+      .then((data) => setPopularBrands(data.slice(0, 8).map(apiBrandToHomeBrand)))
+      .catch(() => setPopularBrands([]));
   }, []);
 
   useEffect(() => {
@@ -163,7 +172,7 @@ export function SearchBar({
           label: term,
           run: () => commitSearch(term),
         })),
-        ...popularBrands.slice(0, 8).map((brand) => ({
+        ...popularBrands.map((brand) => ({
           key: `brand-${brand.id}`,
           label: brand.name,
           run: () => {
@@ -208,7 +217,7 @@ export function SearchBar({
     }
     return [];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showIdle, hasResults, recent, suggestions, value]);
+  }, [showIdle, hasResults, recent, suggestions, value, popularBrands]);
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown") {
@@ -322,7 +331,7 @@ export function SearchBar({
                       >
                         <Image
                           src={item.image}
-                          alt={item.title}
+                          alt={item.name}
                           fill
                           sizes="56px"
                           className="object-cover"
@@ -363,7 +372,7 @@ export function SearchBar({
                   Popular Brands
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {popularBrands.slice(0, 8).map((brand) => (
+                  {popularBrands.map((brand) => (
                     <button
                       key={brand.id}
                       id={`option-brand-${brand.id}`}

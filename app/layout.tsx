@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BackToTop } from "@/components/common/BackToTop";
-import { DemoModeBadge } from "@/components/common/DemoModeBadge";
 import { ShopProviders } from "@/context/ShopProviders";
 import "./globals.css";
 
@@ -73,7 +72,6 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <BackToTop />
-          <DemoModeBadge />
         </ShopProviders>
       </body>
     </html>

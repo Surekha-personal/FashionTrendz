@@ -129,6 +129,34 @@ export interface ApiSearchSuggestions {
   categories: { label: string; slug: string; type: string }[];
 }
 
+// -- Catalog homepage rails (categories/brands/collections) ---------------
+
+export interface ApiCategory {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+  banner_image: string | null;
+}
+
+export interface ApiBrand {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  logo: string | null;
+  banner: string | null;
+}
+
+export interface ApiCollection {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image: string | null;
+  banner: string | null;
+}
+
 // -- Users --------------------------------------------------------------
 
 export interface ApiUser {

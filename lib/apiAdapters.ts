@@ -7,7 +7,10 @@
 import type {
   ApiAddress,
   ApiAddressSnapshot,
+  ApiBrand,
   ApiCartItem,
+  ApiCategory,
+  ApiCollection,
   ApiOrderDetail,
   ApiOrderSummary,
   ApiProductCard,
@@ -15,6 +18,7 @@ import type {
   ApiWishlistItem,
 } from "@/types/api";
 import type { CartLine, WishlistLine } from "@/types/cart";
+import type { Brand as HomeBrand, Category as HomeCategory, EditorialBanner } from "@/types/home";
 import type { Order, ShippingAddress } from "@/types/order";
 import type { Product, ProductVariantOption } from "@/types/product";
 
@@ -165,6 +169,58 @@ export function apiOrderDetailToOrder(o: ApiOrderDetail): Order {
       grandTotal: num(o.grand_total),
     },
     estimatedDelivery: o.estimated_delivery_date ?? "",
+  };
+}
+
+// -- Homepage catalog rails (categories/brands/collections) ---------------
+
+export function apiCategoryToHomeCategory(c: ApiCategory): HomeCategory {
+  return {
+    id: c.id,
+    name: c.name,
+    href: `/${c.slug}`,
+    image: c.image ?? c.banner_image ?? PLACEHOLDER_IMAGE,
+    imageAlt: c.name,
+  };
+}
+
+export function apiBrandToHomeBrand(b: ApiBrand): HomeBrand {
+  return {
+    id: b.id,
+    name: b.name,
+    href: `/search?brand=${b.slug}`,
+  };
+}
+
+// Luxury Collection renders large editorial banners, which is what
+// EditorialBanner already models — reused here rather than inventing a
+// second banner shape for the same UI.
+export function apiBrandToEditorialBanner(b: ApiBrand): EditorialBanner {
+  return {
+    id: b.id,
+    eyebrow: "The Luxury Collection",
+    title: b.name,
+    description: b.description || "",
+    ctaLabel: "Shop The Edit",
+    ctaHref: `/search?brand=${b.slug}`,
+    image: b.banner ?? b.logo ?? PLACEHOLDER_IMAGE,
+    imageAlt: b.name,
+  };
+}
+
+export function apiCollectionToEditorialBanner(c: ApiCollection): EditorialBanner {
+  return {
+    id: c.id,
+    eyebrow: "Editor's Pick",
+    title: c.title,
+    description: c.description || "",
+    ctaLabel: "Shop The Edit",
+    // Routes through the search page's `collection` param, which filters the
+    // real /products/ listing by collection slug (backend's confirmed
+    // ProductFilter.collection) instead of running the title as free text.
+    ctaHref: `/search?collection=${encodeURIComponent(c.slug)}`,
+    image: c.banner ?? c.image ?? PLACEHOLDER_IMAGE,
+    imageAlt: c.title,
   };
 }
 

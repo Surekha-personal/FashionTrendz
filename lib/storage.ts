@@ -1,5 +1,6 @@
-// SSR-safe localStorage/sessionStorage JSON helpers shared by cart, wishlist,
-// orders and the in-progress checkout draft.
+// SSR-safe localStorage/sessionStorage JSON helpers. Cart and wishlist are
+// backend-API-driven and no longer use this — what's left is the admin
+// preview's order list and the in-progress checkout draft.
 function read<T>(area: Storage, key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
@@ -38,11 +39,8 @@ export const sessionStore = {
 };
 
 export const STORAGE_KEYS = {
-  cart: "ft_cart",
-  wishlist: "ft_wishlist",
+  // orders: read by the admin-preview dashboard only (AdminOrdersPanel via
+  // lib/orders.ts) — real checkout goes through the backend API, not here.
   orders: "ft_orders",
   checkoutDraft: "ft_checkout_draft",
-  recentlyViewed: "ft_recently_viewed",
-  demoMode: "ft_demo_mode",
-  demoUser: "ft_demo_user",
 } as const;

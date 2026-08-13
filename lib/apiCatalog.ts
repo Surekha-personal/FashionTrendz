@@ -2,7 +2,7 @@
 // expects from the frontend's FilterState, and adapts the /products/filters/
 // facets payload into the FilterFacets shape ProductFilters already renders.
 
-import { publicGet, publicGetPaged } from "@/lib/api";
+import { api, publicGet, publicGetPaged } from "@/lib/api";
 import { apiProductCardsToProducts } from "@/lib/apiAdapters";
 import { PAGE_SIZE, type FilterState } from "@/lib/filters";
 import type { ApiFacets, ApiProductCard } from "@/types/api";
@@ -56,6 +56,7 @@ export function buildProductQuery(
 export function apiFacetsToFilterFacets(f: ApiFacets): FilterFacets {
   return {
     brands: f.brands.map((b) => b.slug),
+    brandNames: Object.fromEntries(f.brands.map((b) => [b.slug, b.name])),
     colors: f.colors.map((c) => c.color),
     sizes: f.sizes.map((s) => s.size),
     // The facets endpoint doesn't enumerate genders or occasions (they're
@@ -109,4 +110,26 @@ export async function fetchProductListing(
     page: listing.pagination?.page ?? 1,
     totalPages: listing.pagination?.total_pages ?? 1,
   };
+}
+
+// -- Recently viewed --------------------------------------------------------
+// Backed by apps.recommendations.RecentlyViewedViewSet: guests are identified
+// by the same X-Cart-Session header the cart uses (cartHeader: true), signed-in
+// shoppers by their JWT. Not paginated on the backend, so a plain api.get.
+
+export async function fetchRecentlyViewed(limit?: number): Promise<Product[]> {
+  const query = limit ? `?limit=${limit}` : "";
+  const data = await api.get<ApiProductCard[]>(`/recently-viewed/${query}`, {
+    cartHeader: true,
+  });
+  return apiProductCardsToProducts(data);
+}
+
+export async function recordRecentlyViewed(slug: string): Promise<void> {
+  try {
+    await api.post("/recently-viewed/", { product: slug }, { cartHeader: true });
+  } catch {
+    // Recording a view is a side effect, not something a product page should
+    // ever fail or block on.
+  }
 }
