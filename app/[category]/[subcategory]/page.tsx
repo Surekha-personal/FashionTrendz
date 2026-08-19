@@ -18,6 +18,17 @@ interface ApiSubcategory {
   category: { name: string; slug: string };
 }
 
+// Falls back to a readable label derived from the URL slug when the backend
+// response is missing fields this page expects — keeps the page from
+// crashing on a shape mismatch instead of guessing real data that isn't there.
+function humanizeSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 // Sale sub-pages are curated filter presets rather than real subcategories —
 // each maps onto plain ProductFilter query params the backend already knows.
 const SALE_PRESETS: Record<string, { label: string; extra: Record<string, string> }> = {
@@ -31,7 +42,7 @@ const SALE_PRESETS: Record<string, { label: string; extra: Record<string, string
 async function getSubcategory(categorySlug: string, subSlug: string): Promise<ApiSubcategory | null> {
   try {
     const sub = await publicGet<ApiSubcategory>(`/subcategories/${subSlug}/`, 300);
-    return sub.category.slug === categorySlug ? sub : null;
+    return sub.category?.slug === categorySlug ? sub : null;
   } catch (err) {
     if (err instanceof ApiError && err.status === 404) return null;
     throw err;
@@ -46,9 +57,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   const sub = await getSubcategory(categorySlug, subSlug);
   if (!sub) return {};
+  const subName = sub.name ?? humanizeSlug(subSlug);
+  const categoryName = sub.category?.name ?? humanizeSlug(categorySlug);
   return {
-    title: `${sub.name} | ${sub.category.name} | Fashion Trendz`,
-    description: `Shop ${sub.name} in ${sub.category.name} at Fashion Trendz.`,
+    title: `${subName} | ${categoryName} | Fashion Trendz`,
+    description: `Shop ${subName} in ${categoryName} at Fashion Trendz.`,
   };
 }
 
@@ -87,6 +100,9 @@ export default async function SubcategoryPage({ params, searchParams }: PageProp
 
   const sub = await getSubcategory(categorySlug, subSlug);
   if (!sub) notFound();
+  const subName = sub.name ?? humanizeSlug(subSlug);
+  const parentCategoryName = sub.category?.name ?? humanizeSlug(categorySlug);
+  const parentCategorySlug = sub.category?.slug ?? categorySlug;
 
   const { facets, items, total, page, totalPages } = await fetchProductListing(
     "/products/",
@@ -96,19 +112,19 @@ export default async function SubcategoryPage({ params, searchParams }: PageProp
 
   return (
     <ProductListingLayout
-      title={sub.name}
-      description={`${sub.category.name} · ${sub.name}`}
+      title={subName}
+      description={`${parentCategoryName} · ${subName}`}
       breadcrumbs={[
         { label: "Home", href: "/" },
-        { label: sub.category.name, href: `/${sub.category.slug}` },
-        { label: sub.name },
+        { label: parentCategoryName, href: `/${parentCategorySlug}` },
+        { label: subName },
       ]}
       products={items}
       facets={facets}
       total={total}
       page={page}
       totalPages={totalPages}
-      basePath={`/${sub.category.slug}/${sub.slug}`}
+      basePath={`/${parentCategorySlug}/${sub.slug ?? subSlug}`}
       searchParams={sp}
     />
   );

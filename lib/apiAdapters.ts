@@ -25,6 +25,24 @@ import type { Product, ProductVariantOption } from "@/types/product";
 
 const PLACEHOLDER_IMAGE = "/placeholder-product.svg";
 
+// Local cover photos for the "Shop By Category" homepage rail, keyed by
+// backend category slug — see public/category-images/README.md for sources.
+// Live category `image`/`banner_image` fields are frequently null or broken,
+// so these are preferred as the real fallback ahead of the generic
+// placeholder for the categories this storefront actually sells.
+const CATEGORY_COVER_IMAGES: Record<string, string> = {
+  women: "/category-images/women.jpg",
+  men: "/category-images/men.jpg",
+  kids: "/category-images/kids.jpg",
+  beauty: "/category-images/beauty.jpg",
+  accessories: "/category-images/accessories.jpg",
+  footwear: "/category-images/footwear.jpg",
+  bags: "/category-images/bags.jpg",
+  jewellery: "/category-images/jewellery.jpg",
+  luxury: "/category-images/luxury.jpg",
+  sale: "/category-images/sale.jpg",
+};
+
 const num = (value: string | number | null | undefined) =>
   value === null || value === undefined ? 0 : Number(value);
 
@@ -181,7 +199,7 @@ export function apiCategoryToHomeCategory(c: ApiCategory): HomeCategory {
     id: c.id,
     name: c.name,
     href: `/${c.slug}`,
-    image: c.image ?? c.banner_image ?? PLACEHOLDER_IMAGE,
+    image: c.image ?? c.banner_image ?? CATEGORY_COVER_IMAGES[c.slug] ?? PLACEHOLDER_IMAGE,
     imageAlt: c.name,
   };
 }

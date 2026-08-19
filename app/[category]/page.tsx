@@ -18,6 +18,18 @@ interface ApiCategory {
   subcategory_count: number;
 }
 
+// Falls back to a readable label derived from the URL slug when the backend
+// response is missing fields this page expects (e.g. `name`) — keeps the
+// page from crashing on a shape mismatch instead of guessing real category
+// data that isn't there.
+function humanizeSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 async function getCategory(slug: string): Promise<ApiCategory | null> {
   if (slug === "sale") return { name: "Sale", slug: "sale", subcategory_count: 0 };
   try {
@@ -32,9 +44,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { category: categorySlug } = await params;
   const category = await getCategory(categorySlug);
   if (!category) return {};
+  const name = category.name ?? humanizeSlug(categorySlug);
   return {
-    title: `${category.name} | Fashion Trendz`,
-    description: `Shop the latest ${category.name} collection at Fashion Trendz.`,
+    title: `${name} | Fashion Trendz`,
+    description: `Shop the latest ${name} collection at Fashion Trendz.`,
   };
 }
 
@@ -42,6 +55,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const { category: categorySlug } = await params;
   const category = await getCategory(categorySlug);
   if (!category) notFound();
+  const categoryName = category.name ?? humanizeSlug(categorySlug);
 
   const sp = await searchParams;
   const state = parseFilterState(sp);
@@ -55,13 +69,15 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   return (
     <ProductListingLayout
-      title={category.name}
+      title={categoryName}
       description={
         categorySlug === "sale"
           ? "Discounted picks across every category, updated daily."
-          : `Explore ${category.subcategory_count}+ styles across ${category.name.toLowerCase()}.`
+          : category.subcategory_count
+            ? `Explore ${category.subcategory_count}+ styles across ${categoryName.toLowerCase()}.`
+            : `Explore styles across ${categoryName.toLowerCase()}.`
       }
-      breadcrumbs={[{ label: "Home", href: "/" }, { label: category.name }]}
+      breadcrumbs={[{ label: "Home", href: "/" }, { label: categoryName }]}
       products={items}
       facets={facets}
       total={total}
