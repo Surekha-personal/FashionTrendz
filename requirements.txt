@@ -27,12 +27,12 @@ whitenoise==6.12.0
 # deliver inline and there is no beat — so they are only required on a
 # deployment that runs a worker.
 celery==5.6.1
-redis==6.5.0
+redis==6.4.0
 
 # Object storage. Only used when AWS_STORAGE_BUCKET_NAME is set; the default
 # file storage stays on local disk otherwise.
-boto3==1.41.9
-django-storages==1.15.0
+boto3==1.41.5
+django-storages==1.14.6
 
 # WSGI server. gunicorn.conf.py holds the tuning.
 gunicorn==23.0.0
