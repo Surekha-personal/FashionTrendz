@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       // Django dev server - backend device on LAN
       {
         protocol: "http",
-        hostname: "192.168.0.132",
+        hostname: "192.168.0.68",
         port: "8000",
         pathname: "/media/**",
       },
@@ -21,4 +21,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default nextConfig; 

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 
+// Every href below resolves to a real route already in this app — no
+// placeholder "coming soon" destinations, per the no-invented-links rule.
 const footerColumns = [
   {
     heading: "Shop",
@@ -9,25 +11,24 @@ const footerColumns = [
       { label: "Women", href: "/women" },
       { label: "Men", href: "/men" },
       { label: "Kids", href: "/kids" },
+      { label: "New In", href: "/new-in" },
       { label: "Sale", href: "/sale" },
     ],
   },
   {
-    heading: "Help",
+    heading: "Shopping",
     links: [
-      { label: "Track Order", href: "/orders" },
-      { label: "Returns & Exchanges", href: "/help/returns" },
-      { label: "Shipping Info", href: "/help/shipping" },
-      { label: "Contact Us", href: "/help/contact" },
+      { label: "Search", href: "/search" },
+      { label: "My Bag", href: "/cart" },
+      { label: "My Wishlist", href: "/wishlist" },
+      { label: "Track Orders", href: "/orders" },
     ],
   },
   {
-    heading: "Company",
+    heading: "Account",
     links: [
-      { label: "About Fashion Trendz", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Terms of Use", href: "/legal/terms" },
-      { label: "Privacy Policy", href: "/legal/privacy" },
+      { label: "Sign In", href: "/login" },
+      { label: "Create Account", href: "/register" },
     ],
   },
 ];

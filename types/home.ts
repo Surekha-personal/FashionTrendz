@@ -1,6 +1,8 @@
 export interface HeroSlide {
   id: string;
-  eyebrow: string;
+  // Backend Banner model has no kicker/label field — optional so
+  // backend-driven slides can omit the row entirely.
+  eyebrow?: string;
   title: string;
   subtitle: string;
   ctaLabel: string;
@@ -21,6 +23,7 @@ export interface Brand {
   id: string;
   name: string;
   href: string;
+  logo?: string;
 }
 
 export interface Testimonial {

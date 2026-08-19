@@ -18,6 +18,7 @@ import {
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { ProductFilters } from "@/components/product/ProductFilters";
+import { MobileFilterSheet } from "@/components/product/MobileFilterSheet";
 import { SortSelect } from "@/components/product/SortSelect";
 import { JsonLd } from "@/components/common/JsonLd";
 import type { SearchParamsRecord } from "@/lib/filters";
@@ -130,14 +131,7 @@ export function ProductListingLayout({
               {total} {total === 1 ? "product" : "products"}
             </p>
             <div className="flex items-center gap-2">
-              <details className="lg:hidden">
-                <summary className="cursor-pointer list-none rounded-lg border border-border px-3 py-1.5 text-sm">
-                  Filters
-                </summary>
-                <div className="absolute z-30 mt-2 w-72 rounded-xl border border-border bg-popover p-4 shadow-lg">
-                  <ProductFilters facets={facets} showGender={showGender} />
-                </div>
-              </details>
+              <MobileFilterSheet facets={facets} showGender={showGender} />
               <SortSelect />
             </div>
           </div>

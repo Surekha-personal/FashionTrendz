@@ -157,6 +157,18 @@ export interface ApiCollection {
   banner: string | null;
 }
 
+export interface ApiBanner {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  mobile_image: string;
+  alt_text: string;
+  button_text: string;
+  button_link: string;
+  display_order: number;
+}
+
 // -- Users --------------------------------------------------------------
 
 export interface ApiUser {

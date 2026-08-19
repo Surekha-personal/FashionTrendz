@@ -78,7 +78,7 @@ export function CartLineItem({ line }: { line: CartLine }) {
                 type="button"
                 aria-label="Decrease quantity"
                 onClick={() => decrement(line.lineId)}
-                className="flex size-6 items-center justify-center rounded-full hover:bg-muted"
+                className="flex size-7 items-center justify-center rounded-full transition-colors hover:bg-muted active:scale-90"
               >
                 <Minus className="size-3" />
               </button>
@@ -89,7 +89,7 @@ export function CartLineItem({ line }: { line: CartLine }) {
                 type="button"
                 aria-label="Increase quantity"
                 onClick={() => increment(line.lineId)}
-                className="flex size-6 items-center justify-center rounded-full hover:bg-muted"
+                className="flex size-7 items-center justify-center rounded-full transition-colors hover:bg-muted active:scale-90"
               >
                 <Plus className="size-3" />
               </button>

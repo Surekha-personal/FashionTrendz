@@ -7,6 +7,7 @@
 import type {
   ApiAddress,
   ApiAddressSnapshot,
+  ApiBanner,
   ApiBrand,
   ApiCartItem,
   ApiCategory,
@@ -18,7 +19,7 @@ import type {
   ApiWishlistItem,
 } from "@/types/api";
 import type { CartLine, WishlistLine } from "@/types/cart";
-import type { Brand as HomeBrand, Category as HomeCategory, EditorialBanner } from "@/types/home";
+import type { Brand as HomeBrand, Category as HomeCategory, EditorialBanner, HeroSlide } from "@/types/home";
 import type { Order, ShippingAddress } from "@/types/order";
 import type { Product, ProductVariantOption } from "@/types/product";
 
@@ -41,6 +42,7 @@ export function apiProductCardToProduct(p: ApiProductCard): Product {
     rating: num(p.rating_average) || undefined,
     reviewCount: p.review_count,
     isNew: p.is_new_arrival,
+    isBestSeller: p.is_best_seller,
     stock: p.is_in_stock ? 99 : 0,
     description: p.short_description,
   };
@@ -189,6 +191,7 @@ export function apiBrandToHomeBrand(b: ApiBrand): HomeBrand {
     id: b.id,
     name: b.name,
     href: `/search?brand=${b.slug}`,
+    logo: b.logo ?? undefined,
   };
 }
 
@@ -221,6 +224,20 @@ export function apiCollectionToEditorialBanner(c: ApiCollection): EditorialBanne
     ctaHref: `/search?collection=${encodeURIComponent(c.slug)}`,
     image: c.banner ?? c.image ?? PLACEHOLDER_IMAGE,
     imageAlt: c.title,
+  };
+}
+
+// Banner model has no eyebrow/kicker field — omitted rather than faked;
+// HeroCarousel skips the eyebrow row when it's undefined.
+export function apiBannerToHeroSlide(b: ApiBanner): HeroSlide {
+  return {
+    id: b.id,
+    title: b.title,
+    subtitle: b.subtitle,
+    ctaLabel: b.button_text,
+    ctaHref: b.button_link,
+    image: b.image,
+    imageAlt: b.alt_text,
   };
 }
 

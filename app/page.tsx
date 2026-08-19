@@ -8,13 +8,14 @@ import { FeaturedBrands } from "@/components/home/FeaturedBrands";
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { publicGet, publicGetPaged } from "@/lib/api";
 import {
+  apiBannerToHeroSlide,
   apiBrandToEditorialBanner,
   apiBrandToHomeBrand,
   apiCategoryToHomeCategory,
   apiCollectionToEditorialBanner,
   apiProductCardsToProducts,
 } from "@/lib/apiAdapters";
-import type { ApiBrand, ApiCategory, ApiCollection, ApiHomepageProducts } from "@/types/api";
+import type { ApiBanner, ApiBrand, ApiCategory, ApiCollection, ApiHomepageProducts } from "@/types/api";
 
 // Product rails are live backend data — always render at request time
 // rather than being baked into the build as a static shell.
@@ -78,7 +79,7 @@ const EMPTY_HOMEPAGE: ApiHomepageProducts = {
 };
 
 export default async function Home() {
-  const [rails, categoriesRes, featuredBrandsRes, editorsPicksRes, luxuryBrandsRes] =
+  const [rails, categoriesRes, featuredBrandsRes, editorsPicksRes, luxuryBrandsRes, heroBanners] =
     await Promise.all([
       publicGet<ApiHomepageProducts>("/products/homepage/", 60).catch(() => EMPTY_HOMEPAGE),
       publicGetPaged<ApiCategory[]>("/categories/", 300).catch(() => ({
@@ -97,6 +98,7 @@ export default async function Home() {
         data: [] as ApiBrand[],
         pagination: undefined,
       })),
+      publicGet<ApiBanner[]>("/banners/?placement=hero", 60).catch(() => [] as ApiBanner[]),
     ]);
 
   const trendingProducts = apiProductCardsToProducts(rails.trending);
@@ -108,6 +110,9 @@ export default async function Home() {
   const featuredBrands = featuredBrandsRes.data.map(apiBrandToHomeBrand);
   const editorsPicks = editorsPicksRes.data.map(apiCollectionToEditorialBanner);
   const luxuryBanners = luxuryBrandsRes.data.map(apiBrandToEditorialBanner);
+  const heroSlides = [...heroBanners]
+    .sort((a, b) => a.display_order - b.display_order)
+    .map(apiBannerToHeroSlide);
 
   return (
     <>
@@ -124,7 +129,7 @@ export default async function Home() {
           },
         }}
       />
-      <HeroCarousel />
+      <HeroCarousel slides={heroSlides} />
       <ShopByCategory categories={categories} />
       <ProductCarouselSection
         eyebrow="Hot Right Now"

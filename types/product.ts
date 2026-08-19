@@ -19,6 +19,7 @@ export interface Product {
   rating?: number;
   reviewCount?: number;
   isNew?: boolean;
+  isBestSeller?: boolean;
   sizes?: string[];
   colors?: string[];
   stock?: number;

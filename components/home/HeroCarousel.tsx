@@ -15,11 +15,13 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { heroSlides } from "@/data/hero";
+import type { HeroSlide } from "@/types/home";
 
-export function HeroCarousel() {
+export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  if (slides.length === 0) return null;
 
   return (
     <section className="relative">
@@ -32,7 +34,7 @@ export function HeroCarousel() {
         }}
       >
         <CarouselContent className="ml-0">
-          {heroSlides.map((slide, index) => (
+          {slides.map((slide, index) => (
             <CarouselItem key={slide.id} className="pl-0">
               <div className="relative h-[70vh] min-h-[420px] w-full overflow-hidden sm:h-[80vh] sm:min-h-[520px]">
                 <Image
@@ -55,9 +57,11 @@ export function HeroCarousel() {
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="flex flex-col gap-3 text-white"
                       >
-                        <span className="text-xs font-semibold tracking-[0.25em] text-white/80 uppercase">
-                          {slide.eyebrow}
-                        </span>
+                        {slide.eyebrow && (
+                          <span className="text-xs font-semibold tracking-[0.25em] text-white/80 uppercase">
+                            {slide.eyebrow}
+                          </span>
+                        )}
                         <h1 className="font-heading max-w-lg text-3xl font-semibold sm:text-5xl">
                           {slide.title}
                         </h1>
@@ -67,7 +71,7 @@ export function HeroCarousel() {
                         <Button
                           asChild
                           size="lg"
-                          className="mt-2 w-fit rounded-full bg-white text-primary hover:bg-white/90"
+                          className="mt-2 w-fit rounded-full bg-white text-xs font-semibold tracking-[0.15em] text-primary uppercase hover:bg-white/90"
                         >
                           <Link href={slide.ctaHref}>{slide.ctaLabel}</Link>
                         </Button>
@@ -83,7 +87,7 @@ export function HeroCarousel() {
         <CarouselNext className="right-4 border-none bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 hover:text-white sm:right-8" />
       </Carousel>
       <div className="absolute inset-x-0 bottom-5 flex items-center justify-center gap-2">
-        {heroSlides.map((slide, index) => (
+        {slides.map((slide, index) => (
           <button
             key={slide.id}
             type="button"

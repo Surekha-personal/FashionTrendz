@@ -212,14 +212,18 @@ export default async function ProductPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-semibold">{formatPrice(product.price)}</span>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="text-3xl font-bold text-foreground">
+              {formatPrice(product.price)}
+            </span>
             {discountPct > 0 && (
               <>
                 <span className="text-base text-muted-foreground line-through">
                   {formatPrice(product.compareAtPrice ?? product.price)}
                 </span>
-                <Badge variant="secondary">{discountPct}% OFF</Badge>
+                <Badge className="bg-accent text-accent-foreground">
+                  {discountPct}% OFF
+                </Badge>
               </>
             )}
           </div>

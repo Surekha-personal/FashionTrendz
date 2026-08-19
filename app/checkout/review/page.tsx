@@ -249,7 +249,12 @@ export default function ReviewStep() {
             </div>
           </div>
           {placeError && <p className="mt-3 text-sm text-destructive">{placeError}</p>}
-          <Button size="lg" className="mt-5 w-full" onClick={placeOrder} disabled={placing}>
+          <Button
+            size="lg"
+            className="mt-5 h-12 w-full text-base font-semibold"
+            onClick={placeOrder}
+            disabled={placing}
+          >
             {placing ? "Placing Order…" : "Place Order"}
           </Button>
         </Card>

@@ -31,11 +31,13 @@ function navItemFor(category: Category): NavItem {
       {
         label: `New In ${category.name}`,
         href: `/${category.slug}?sort=newest`,
+        image: category.image,
         imageAlt: `${category.name} new arrivals`,
       },
       {
         label: `Trending in ${category.name}`,
         href: `/${category.slug}?sort=popularity`,
+        image: category.image,
         imageAlt: `${category.name} trending picks`,
       },
     ],

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { parseFilterState } from "@/lib/filters";
+import { COLOR_HEX } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import type { FilterFacets, Gender } from "@/types/catalog";
 
@@ -283,12 +284,16 @@ export function ProductFilters({
                   type="button"
                   onClick={() => toggleCsv("color", color, state.colors)}
                   className={cn(
-                    "rounded-full border px-3 py-1 text-xs",
+                    "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors",
                     state.colors.includes(color)
                       ? "border-accent bg-accent/10 text-accent"
-                      : "border-border text-foreground/80"
+                      : "border-border text-foreground/80 hover:border-foreground/30"
                   )}
                 >
+                  <span
+                    className="size-3 shrink-0 rounded-full border border-black/10"
+                    style={{ backgroundColor: COLOR_HEX[color] ?? "#cccccc" }}
+                  />
                   {color}
                 </button>
               ))}

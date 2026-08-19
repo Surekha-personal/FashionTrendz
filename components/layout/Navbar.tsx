@@ -28,29 +28,37 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 bg-background/95 backdrop-blur-sm transition-shadow",
+        "sticky top-0 z-40 bg-background/95 backdrop-blur-sm transition-shadow duration-200",
         scrolled ? "shadow-sm" : "border-b border-transparent"
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center gap-5 px-4 py-4 sm:px-6 lg:px-8">
         <MobileNav />
         <Link
           href="/"
-          className="font-heading text-xl font-semibold tracking-tight"
+          className="font-heading text-xl font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-2xl"
         >
           Fashion Trendz
         </Link>
-        <div className="hidden flex-1 md:flex md:justify-center">
+        {/* The mega menu lists every category (9 + Sale) as its own trigger,
+            which is too dense to share a row with the search bar below
+            ~1024px — tablets fall back to the mobile drawer nav instead of
+            a cramped desktop bar. */}
+        <div className="hidden flex-1 lg:flex lg:justify-center">
           <MegaMenu />
         </div>
-        <div className="ml-auto hidden max-w-xs flex-1 md:block">
+        {/* The search input is a single flexible-width field (unlike the
+            dense mega menu), so it can safely come back a breakpoint
+            earlier than the category nav — tablets get a real search box
+            instead of just a hamburger and empty space. */}
+        <div className="ml-auto hidden max-w-md flex-1 md:block">
           <SearchBar />
         </div>
-        <div className="ml-auto flex items-center gap-1 md:ml-0">
+        <div className="ml-auto flex items-center gap-0.5 md:ml-0">
           <Button
             variant="ghost"
             size="icon"
-            className="relative hidden sm:inline-flex"
+            className="relative hidden transition-colors hover:text-accent sm:inline-flex"
             asChild
           >
             <Link href="/wishlist" aria-label="Wishlist">
@@ -73,7 +81,12 @@ export function Navbar() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Account">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Account"
+                className="transition-colors hover:text-accent"
+              >
                 <User />
               </Button>
             </DropdownMenuTrigger>

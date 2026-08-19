@@ -1,36 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, Loader2, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { COLOR_HEX } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import type { ProductVariantOption } from "@/types/product";
-
-const COLOR_HEX: Record<string, string> = {
-  Black: "#111111",
-  White: "#f5f5f5",
-  Navy: "#1f2a44",
-  Beige: "#e8dcc8",
-  Olive: "#6b6f42",
-  Maroon: "#5c1a26",
-  Mustard: "#d9a441",
-  "Blush Pink": "#f3c9cd",
-  Ivory: "#f4f1e8",
-  Charcoal: "#36454f",
-  Emerald: "#0f6b4c",
-  Rust: "#b0532a",
-  Lavender: "#c8b8e8",
-  Teal: "#1f6f6b",
-  Camel: "#c19a6b",
-  "Grey Melange": "#9a9a9a",
-  Wine: "#5e1f30",
-  "Sky Blue": "#8ecae6",
-  Coral: "#e8735c",
-  Sand: "#dcc7a1",
-};
 
 interface ProductOptionsProps {
   productId: string;
@@ -72,6 +50,7 @@ export function ProductOptions({
   const wishlisted = isWishlisted(productId);
   const outOfStock = stock <= 0;
   const requiresSize = sizes.length > 0 && sizes[0] !== "One Size";
+  const [adding, setAdding] = useState(false);
 
   const matchedVariant = useMemo(() => {
     if (!variants) return undefined;
@@ -82,7 +61,7 @@ export function ProductOptions({
     );
   }, [variants, selectedSize, selectedColor, requiresSize, colors.length]);
 
-  const addToBag = () => {
+  const addToBag = async () => {
     if (requiresSize && !selectedSize) {
       toast.error("Please select a size");
       return;
@@ -95,19 +74,24 @@ export function ProductOptions({
       toast.error("That combination is out of stock");
       return;
     }
-    addToCart({
-      productId,
-      slug,
-      name,
-      brand,
-      image,
-      price,
-      discountedPrice,
-      size: selectedSize,
-      color: selectedColor || undefined,
-      variantSku: matchedVariant?.sku,
-    });
-    onAdded?.();
+    setAdding(true);
+    try {
+      await addToCart({
+        productId,
+        slug,
+        name,
+        brand,
+        image,
+        price,
+        discountedPrice,
+        size: selectedSize,
+        color: selectedColor || undefined,
+        variantSku: matchedVariant?.sku,
+      });
+      onAdded?.();
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -141,21 +125,37 @@ export function ProductOptions({
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium">Size</span>
           <div className="flex flex-wrap gap-2">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => setSelectedSize(size)}
-                className={cn(
-                  "min-w-11 rounded-lg border px-3 py-2 text-sm",
-                  selectedSize === size
-                    ? "border-accent bg-accent/10 text-accent"
-                    : "border-border text-foreground/80 hover:border-foreground/40"
-                )}
-              >
-                {size}
-              </button>
-            ))}
+            {sizes.map((size) => {
+              // Only judge a size "unavailable" once real variant data has
+              // loaded — before that (e.g. quick view still fetching) every
+              // size stays selectable rather than flashing as sold out.
+              const unavailable =
+                variants !== undefined &&
+                !variants.some(
+                  (v) =>
+                    v.size === size &&
+                    (colors.length === 0 || v.color === selectedColor) &&
+                    v.availableStock > 0
+                );
+              return (
+                <button
+                  key={size}
+                  type="button"
+                  disabled={unavailable}
+                  onClick={() => setSelectedSize(size)}
+                  className={cn(
+                    "min-w-11 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
+                    unavailable
+                      ? "cursor-not-allowed border-border text-muted-foreground/50 line-through"
+                      : selectedSize === size
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-border text-foreground/80 hover:border-foreground/40"
+                  )}
+                >
+                  {size}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -163,21 +163,29 @@ export function ProductOptions({
       <div className="flex gap-3">
         <Button
           size="lg"
-          className="flex-1"
-          disabled={outOfStock || (variants !== undefined && variants.length === 0)}
+          className="h-12 flex-1 text-base font-semibold tracking-wide"
+          disabled={
+            outOfStock || adding || (variants !== undefined && variants.length === 0)
+          }
           onClick={addToBag}
         >
-          <ShoppingBag />
-          {outOfStock ? "Out of Stock" : "Add to Bag"}
+          {adding ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <ShoppingBag />
+          )}
+          {outOfStock ? "Out of Stock" : adding ? "Adding…" : "Add to Bag"}
         </Button>
         <Button
           size="lg"
           variant="outline"
+          className="h-12 w-12 shrink-0 transition-transform active:scale-90"
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
           onClick={() =>
             toggleWishlist({ productId, slug, name, brand, image, price, discountedPrice })
           }
         >
-          <Heart className={cn(wishlisted && "fill-accent text-accent")} />
+          <Heart className={cn("transition-all", wishlisted && "fill-accent text-accent")} />
         </Button>
       </div>
 

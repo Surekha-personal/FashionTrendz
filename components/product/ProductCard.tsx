@@ -37,6 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
     rating,
     reviewCount,
     isNew,
+    isBestSeller,
     slug,
     sizes,
     colors,
@@ -91,14 +92,21 @@ export function ProductCard({ product }: { product: Product }) {
                 />
               )}
               <div className="absolute top-2 left-2 flex flex-col gap-1">
-                {isNew && <Badge>New</Badge>}
-                {discount && <Badge variant="secondary">{discount}% OFF</Badge>}
+                {discount ? (
+                  <Badge className="bg-accent text-accent-foreground">
+                    -{discount}%
+                  </Badge>
+                ) : isNew ? (
+                  <Badge>New</Badge>
+                ) : isBestSeller ? (
+                  <Badge variant="secondary">Bestseller</Badge>
+                ) : null}
               </div>
               <button
                 type="button"
                 aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
                 onClick={onWishlistClick}
-                className="absolute top-2 right-2 flex size-8 items-center justify-center rounded-full bg-background/80 text-foreground backdrop-blur-sm transition-colors hover:text-accent"
+                className="absolute top-2 right-2 flex size-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-transform hover:scale-110 hover:text-accent active:scale-95"
               >
                 <Heart
                   className={cn(
@@ -121,27 +129,32 @@ export function ProductCard({ product }: { product: Product }) {
                       .finally(() => setLoadingVariants(false));
                   }
                 }}
-                className="absolute inset-x-2 bottom-2 flex translate-y-2 items-center justify-center gap-1.5 rounded-lg bg-background/95 py-2 text-xs font-medium opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+                className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1.5 rounded-lg bg-background/95 py-2 text-xs font-medium backdrop-blur-sm transition-all duration-200 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
               >
                 <Eye className="size-3.5" />
                 Quick View
               </button>
             </div>
             <div className="flex flex-col gap-0.5 px-3 pb-3">
-              <span className="text-xs font-medium text-muted-foreground">
+              <span className="truncate text-xs font-medium text-muted-foreground">
                 {brand}
               </span>
               <span className="truncate text-sm text-foreground">{name}</span>
               {typeof rating === "number" && (
                 <Rating value={rating} count={reviewCount} className="py-0.5" />
               )}
-              <div className="flex items-center gap-2 pt-1">
-                <span className="text-sm font-semibold">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 pt-1">
+                <span className="text-sm font-semibold text-foreground">
                   {formatPrice(price)}
                 </span>
                 {compareAtPrice && (
                   <span className="text-xs text-muted-foreground line-through">
                     {formatPrice(compareAtPrice)}
+                  </span>
+                )}
+                {discount && (
+                  <span className="text-xs font-semibold text-accent">
+                    {discount}% off
                   </span>
                 )}
               </div>

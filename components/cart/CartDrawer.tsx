@@ -24,7 +24,7 @@ export function CartDrawer() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative transition-colors hover:text-accent">
           <ShoppingBag />
           <AnimatePresence>
             {itemCount > 0 && (

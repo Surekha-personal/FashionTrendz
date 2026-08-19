@@ -210,7 +210,7 @@ export default function PaymentStep() {
           {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
 
-        <Button size="lg" className="mt-6 w-full" onClick={onContinue}>
+        <Button size="lg" className="mt-6 h-12 w-full text-base font-semibold" onClick={onContinue}>
           Continue to Review
         </Button>
       </Card>

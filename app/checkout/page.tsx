@@ -255,7 +255,12 @@ export default function ShippingStep() {
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="mt-2 w-full" disabled={submitting}>
+          <Button
+            type="submit"
+            size="lg"
+            className="mt-2 h-12 w-full text-base font-semibold"
+            disabled={submitting}
+          >
             {submitting ? "Saving…" : "Continue to Delivery"}
           </Button>
         </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/home/SectionHeading";
@@ -28,11 +29,23 @@ export function FeaturedBrands({ brands }: { brands: Brand[] }) {
           <motion.div key={brand.id} variants={fadeInUp}>
             <Link
               href={brand.href}
-              className="group flex h-24 items-center justify-center rounded-2xl border border-border bg-card px-4 shadow-sm transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg sm:h-28"
+              className="group flex h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-border bg-card px-4 shadow-sm transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg sm:h-28"
             >
-              <span className="font-heading text-center text-base font-medium text-foreground/80 transition-colors group-hover:text-accent sm:text-lg">
-                {brand.name}
-              </span>
+              {brand.logo ? (
+                <span className="relative h-9 w-full sm:h-10">
+                  <Image
+                    src={brand.logo}
+                    alt={brand.name}
+                    fill
+                    sizes="140px"
+                    className="object-contain grayscale transition-all duration-200 group-hover:grayscale-0"
+                  />
+                </span>
+              ) : (
+                <span className="font-heading text-center text-base font-medium text-foreground/80 transition-colors group-hover:text-accent sm:text-lg">
+                  {brand.name}
+                </span>
+              )}
             </Link>
           </motion.div>
         ))}

@@ -273,7 +273,7 @@ export function SearchBar({
         <div
           id="search-suggestions"
           role="listbox"
-          className="absolute top-full z-50 mt-2 w-full min-w-[20rem] overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
+          className="absolute top-full z-50 mt-2 w-full min-w-72 overflow-hidden rounded-xl border border-border bg-popover shadow-lg"
         >
           {showIdle ? (
             <div className="flex max-h-[28rem] flex-col gap-4 overflow-y-auto p-4">
