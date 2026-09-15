@@ -33,7 +33,7 @@ export function buildProductQuery(
   filters: FilterState,
   extra: Record<string, string> = {}
 ): URLSearchParams {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(); 
   if (filters.brands.length) params.set("brand", filters.brands.join(","));
   if (filters.colors.length) params.set("color", filters.colors.join(","));
   if (filters.sizes.length) params.set("size", filters.sizes.join(","));
@@ -70,7 +70,7 @@ export function apiFacetsToFilterFacets(f: ApiFacets): FilterFacets {
       "party",
       "wedding",
       "festive",
-      "sports",
+      "sports", 
       "lounge",
       "beach",
       "work",

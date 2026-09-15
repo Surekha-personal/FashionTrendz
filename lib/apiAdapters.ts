@@ -41,6 +41,45 @@ const CATEGORY_COVER_IMAGES: Record<string, string> = {
   jewellery: "/category-images/jewellery.jpg",
   luxury: "/category-images/luxury.jpg",
   sale: "/category-images/sale.jpg",
+  maternity: "/category-images/maternity.jpg",
+  watches: "/category-images/watches.jpg",
+  "occasion-wear": "/category-images/occasion-wear.jpg",
+  eyewear: "/category-images/eyewear.jpg",
+  sportswear: "/category-images/sportswear.jpg",
+  winterwear: "/category-images/winterwear.jpg",
+  "ethnic-wear": "/category-images/ethnic-wear.jpg",
+  "home-living": "/category-images/home-living.jpg",
+  fragrances: "/category-images/fragrances.jpg",
+  "plus-size": "/category-images/plus-size.jpg",
+};
+
+// Local cover photos for "The Luxury Collection" homepage banners, keyed by
+// backend brand slug — see public/luxury-collection-images/README.md for
+// sources. Same fallback rationale as CATEGORY_COVER_IMAGES: brand.banner is
+// frequently null, so this is the real fallback ahead of the placeholder.
+const LUXURY_COLLECTION_IMAGES: Record<string, string> = {
+  "aarohi-couture": "/luxury-collection-images/aarohi-couture.jpg",
+  "casa-marbella": "/luxury-collection-images/casa-marbella.jpg",
+  "roux-atelier": "/luxury-collection-images/roux-atelier.jpg",
+  "lumiere-blanc": "/luxury-collection-images/lumiere-blanc.jpg",
+  "marchetti-pelle": "/luxury-collection-images/marchetti-pelle.jpg",
+  "tessuto-nero": "/luxury-collection-images/tessuto-nero.jpg",
+  "anara-jewels": "/luxury-collection-images/anara-jewels.jpg",
+  "odeon-timepieces": "/luxury-collection-images/odeon-timepieces.jpg",
+  "ravenna-rossi": "/luxury-collection-images/ravenna-rossi.jpg",
+  "alto-firenze": "/luxury-collection-images/alto-firenze.jpg",
+  "palazzo-verde": "/luxury-collection-images/palazzo-verde.jpg",
+  "auric-atelier": "/luxury-collection-images/auric-atelier.jpg",
+};
+
+// Local cover photos for the "Editor's Picks" homepage cards, keyed by
+// backend collection slug — see public/editorial-images/README.md for
+// sources. Same fallback rationale as CATEGORY_COVER_IMAGES/
+// LUXURY_COLLECTION_IMAGES: collection.banner/image are frequently null.
+const EDITORIAL_IMAGES: Record<string, string> = {
+  "editors-picks": "/editorial-images/editors-picks.jpg",
+  "workwear-edit": "/editorial-images/workwear-edit.jpg",
+  "statement-jewellery": "/editorial-images/statement-jewellery.jpg",
 };
 
 const num = (value: string | number | null | undefined) =>
@@ -224,7 +263,7 @@ export function apiBrandToEditorialBanner(b: ApiBrand): EditorialBanner {
     description: b.description || "",
     ctaLabel: "Shop The Edit",
     ctaHref: `/search?brand=${b.slug}`,
-    image: b.banner ?? b.logo ?? PLACEHOLDER_IMAGE,
+    image: b.banner ?? b.logo ?? LUXURY_COLLECTION_IMAGES[b.slug] ?? PLACEHOLDER_IMAGE,
     imageAlt: b.name,
   };
 }
@@ -240,7 +279,7 @@ export function apiCollectionToEditorialBanner(c: ApiCollection): EditorialBanne
     // real /products/ listing by collection slug (backend's confirmed
     // ProductFilter.collection) instead of running the title as free text.
     ctaHref: `/search?collection=${encodeURIComponent(c.slug)}`,
-    image: c.banner ?? c.image ?? PLACEHOLDER_IMAGE,
+    image: c.banner ?? c.image ?? EDITORIAL_IMAGES[c.slug] ?? PLACEHOLDER_IMAGE,
     imageAlt: c.title,
   };
 }
