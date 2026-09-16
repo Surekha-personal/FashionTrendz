@@ -119,7 +119,7 @@ jobs:
           EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
           SECURE_SSL_REDIRECT: "False"
         run: |
-          python manage.py test --parallel 4 --shuffle
+          python manage.py test --shuffle
 
   docker:
     name: Docker Build
