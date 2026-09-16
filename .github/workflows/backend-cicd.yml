@@ -21,11 +21,10 @@ jobs:
       ENVIRONMENT: ci
       ALLOWED_HOSTS: localhost,127.0.0.1,testserver
 
-      DB_NAME: fashion_trendz
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: localhost
-      DB_PORT: "5432"
+      # IMPORTANT:
+      # Force CI to use the PostgreSQL service container.
+      # This overrides DATABASE_URL from .env.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fashion_trendz
 
       CELERY_BROKER_URL: ""
       EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
@@ -60,13 +59,13 @@ jobs:
     steps:
 
       # ----------------------------------------------------------
-      # Checkout
+      # CHECKOUT
       # ----------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
       # ----------------------------------------------------------
-      # Python
+      # PYTHON
       # ----------------------------------------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -75,7 +74,7 @@ jobs:
           cache: pip
 
       # ----------------------------------------------------------
-      # Install dependencies
+      # INSTALL DEPENDENCIES
       # ----------------------------------------------------------
       - name: Install dependencies
         run: |
@@ -83,7 +82,7 @@ jobs:
           pip install -r requirements.txt
 
       # ----------------------------------------------------------
-      # Django system checks
+      # DJANGO CHECKS
       # ----------------------------------------------------------
       - name: Django checks
         run: |
@@ -91,25 +90,21 @@ jobs:
           python manage.py check --deploy --fail-level ERROR
 
       # ----------------------------------------------------------
-      # Check migration files
+      # MIGRATION CHECK
       # ----------------------------------------------------------
       - name: Migration check
         run: |
           python manage.py makemigrations --check --dry-run
 
       # ----------------------------------------------------------
-      # Apply migrations
+      # RUN MIGRATIONS
       # ----------------------------------------------------------
       - name: Run migrations
         run: |
           python manage.py migrate --noinput
 
       # ----------------------------------------------------------
-      # Clean old Django test database
-      #
-      # Fixes:
-      # database "test_fashion" already exists
-      # database is being accessed by other users
+      # RESET TEST DATABASE
       # ----------------------------------------------------------
       - name: Reset test database
         run: |
@@ -117,16 +112,16 @@ jobs:
             -h localhost \
             -U postgres \
             -d postgres \
-            -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'test_fashion' AND pid <> pg_backend_pid();"
+            -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'test_fashion_trendz' AND pid <> pg_backend_pid();"
 
           PGPASSWORD=postgres psql \
             -h localhost \
             -U postgres \
             -d postgres \
-            -c "DROP DATABASE IF EXISTS test_fashion;"
+            -c "DROP DATABASE IF EXISTS test_fashion_trendz;"
 
       # ----------------------------------------------------------
-      # Run Django tests
+      # RUN TESTS
       # ----------------------------------------------------------
       - name: Run tests
         run: |
@@ -144,27 +139,27 @@ jobs:
     steps:
 
       # ----------------------------------------------------------
-      # Checkout
+      # CHECKOUT
       # ----------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
       # ----------------------------------------------------------
-      # Build Docker image
+      # BUILD IMAGE
       # ----------------------------------------------------------
       - name: Build Docker image
         run: |
           docker build -t fashion-backend:new .
 
       # ----------------------------------------------------------
-      # Save Docker image
+      # SAVE IMAGE
       # ----------------------------------------------------------
       - name: Save Docker image
         run: |
           docker save fashion-backend:new -o fashion-backend-image.tar
 
       # ----------------------------------------------------------
-      # Upload image as GitHub Actions artifact
+      # UPLOAD ARTIFACT
       # ----------------------------------------------------------
       - name: Upload Docker image
         uses: actions/upload-artifact@v4
@@ -174,7 +169,7 @@ jobs:
 
 
   # ============================================================
-  # DEPLOY TO AWS EC2
+  # DEPLOY TO EC2
   # ============================================================
   deploy:
     name: Deploy to EC2
@@ -184,7 +179,7 @@ jobs:
     steps:
 
       # ----------------------------------------------------------
-      # Download Docker image artifact
+      # DOWNLOAD IMAGE
       # ----------------------------------------------------------
       - name: Download Docker image
         uses: actions/download-artifact@v4
@@ -193,7 +188,7 @@ jobs:
           path: ./
 
       # ----------------------------------------------------------
-      # Copy Docker image to EC2
+      # COPY IMAGE TO EC2
       # ----------------------------------------------------------
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -205,7 +200,7 @@ jobs:
           target: "/home/ubuntu/fashion-backend/"
 
       # ----------------------------------------------------------
-      # Deploy on EC2
+      # DEPLOY
       # ----------------------------------------------------------
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -244,14 +239,13 @@ jobs:
               -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
               fashion-backend:new
 
-
-            echo "Waiting for application to start..."
+            echo "Waiting for application..."
 
             sleep 10
 
 
             # ====================================================
-            # HEALTH CHECK TEST CONTAINER
+            # TEST HEALTH CHECK
             # ====================================================
 
             echo "================================="
@@ -264,13 +258,11 @@ jobs:
               echo "HEALTH CHECK PASSED"
               echo "================================="
 
-
-              # Remove test container
               docker rm -f test-container-backend
 
 
               # ==================================================
-              # REMOVE OLD BACKUP IMAGE
+              # REMOVE OLD BACKUP
               # ==================================================
 
               if docker image inspect fashion-backend-prod:backup >/dev/null 2>&1; then
@@ -302,7 +294,7 @@ jobs:
 
 
               # ==================================================
-              # START NEW PRODUCTION CONTAINER
+              # START NEW PRODUCTION
               # ==================================================
 
               echo "================================="
@@ -316,9 +308,6 @@ jobs:
                 -e SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}" \
                 -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
                 fashion-backend:new
-
-
-              echo "Waiting for production application..."
 
               sleep 5
 
@@ -341,18 +330,11 @@ jobs:
 
                 echo "================================="
                 echo "PRODUCTION HEALTH CHECK FAILED"
+                echo "ROLLING BACK..."
                 echo "================================="
 
-                echo "Rolling back..."
-
-
-                # Remove failed production container
                 docker rm -f fashion-backend-prod 2>/dev/null || true
 
-
-                # ==================================================
-                # ROLLBACK TO BACKUP
-                # ==================================================
 
                 if docker image inspect fashion-backend-prod:backup >/dev/null 2>&1; then
 
@@ -382,19 +364,12 @@ jobs:
 
               fi
 
-
             else
-
-              # ==================================================
-              # TEST CONTAINER HEALTH CHECK FAILED
-              # ==================================================
 
               echo "================================="
               echo "HEALTH CHECK FAILED"
               echo "DEPLOYMENT CANCELLED"
               echo "================================="
-
-              echo "Container logs:"
 
               docker logs test-container-backend --tail 50
 
@@ -410,7 +385,6 @@ jobs:
             # ====================================================
 
             rm -f fashion-backend-image.tar
-
 
             echo "================================="
             echo "Running containers:"
