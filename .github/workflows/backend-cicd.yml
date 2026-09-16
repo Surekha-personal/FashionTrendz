@@ -24,8 +24,7 @@ jobs:
       # IMPORTANT:
       # Force CI to use the PostgreSQL service container.
       # This overrides DATABASE_URL from .env.
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fashion_trendz
-
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fashion_trendz?sslmode=disable
       CELERY_BROKER_URL: ""
       EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
       SECURE_SSL_REDIRECT: "False"
